@@ -1,4 +1,4 @@
-# Ứng Dụng Giáo Dục Cho Trẻ
+# Ứng Dụng Giáo Dục Và Giải Trí Cho Trẻ
 
 **Đề tài:** Thiết kế và xây dựng ứng dụng giải trí và giáo dục tương tác cho trẻ em trên nền tảng Android.
 
