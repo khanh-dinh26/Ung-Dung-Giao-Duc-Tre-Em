@@ -1,4 +1,4 @@
-# Android Kids Edu App
+# Ung-Dung Giao Duc Tre Em
 
 **Đề tài:** Thiết kế và xây dựng ứng dụng giải trí và giáo dục tương tác cho trẻ em trên nền tảng Android.
 
