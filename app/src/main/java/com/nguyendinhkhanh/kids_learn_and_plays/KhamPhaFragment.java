@@ -12,11 +12,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link KhamPhaFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class KhamPhaFragment extends Fragment {
 
     @Nullable
@@ -30,10 +25,17 @@ public class KhamPhaFragment extends Fragment {
         CardView cardGiaoThong = view.findViewById(R.id.card_giao_thong);
         CardView cardChuCai = view.findViewById(R.id.card_chu_cai);
 
-        // Lệnh bấm Thẻ Động Vật -> Mở trang Động Vật
         cardDongVat.setOnClickListener(v -> {
             Intent intent = new Intent(getActivity(), DongVatActivity.class);
             startActivity(intent);
+        });
+
+        cardGiaoThong.setOnClickListener(v -> {
+            startActivity(new Intent(getActivity(), GiaoThongActivity.class));
+        });
+
+        cardChuCai.setOnClickListener(v -> {
+            startActivity(new Intent(getActivity(), ChuCaiActivity.class));
         });
 
         return view;

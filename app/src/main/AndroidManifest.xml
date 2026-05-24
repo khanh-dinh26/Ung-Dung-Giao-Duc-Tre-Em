@@ -12,6 +12,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.KidsLearnAndPlays">
         <activity
+            android:name=".ChuCaiActivity"
+            android:exported="false" />
+        <activity
+            android:name=".GiaoThongActivity"
+            android:exported="false" />
+        <activity
             android:name=".DongVatActivity"
             android:exported="false" />
         <activity

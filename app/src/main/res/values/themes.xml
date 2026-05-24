@@ -10,6 +10,10 @@
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">15dp</item>
     </style>
+    <style name="RoundedImage" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">35dp</item>
+    </style>
     <style name="CircleLogo" parent="">
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">50%</item>

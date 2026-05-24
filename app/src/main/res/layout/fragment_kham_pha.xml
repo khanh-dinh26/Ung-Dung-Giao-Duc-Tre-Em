@@ -31,7 +31,7 @@
         <androidx.cardview.widget.CardView
             android:id="@+id/card_dong_vat"
             android:layout_width="match_parent"
-            android:layout_height="160dp"
+            android:layout_height="200dp"
             android:layout_marginTop="25dp"
             android:clickable="true"
             android:focusable="true"
@@ -59,12 +59,12 @@
                         android:paddingHorizontal="10dp"
                         android:text="KHÁM PHÁ"
                         android:textColor="#FFFFFF"
-                        android:textSize="10sp" />
+                        android:textSize="15sp" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
+                        android:layout_marginTop="20dp"
                         android:text="Thế Giới Động Vật"
                         android:textColor="@color/text_black"
                         android:textSize="24sp"
@@ -74,20 +74,20 @@
 
                 <com.google.android.material.imageview.ShapeableImageView
                     android:id="@+id/img_lion"
-                    android:layout_width="120dp"
-                    android:layout_height="120dp"
+                    android:layout_width="200dp"
+                    android:layout_height="200dp"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:scaleType="centerCrop"
                     android:src="@drawable/lion_img"
-                    app:shapeAppearanceOverlay="@style/RoundedImageView15dp" />
+                    app:shapeAppearanceOverlay="@style/RoundedImage" />
             </RelativeLayout>
         </androidx.cardview.widget.CardView>
 
         <androidx.cardview.widget.CardView
             android:id="@+id/card_giao_thong"
             android:layout_width="match_parent"
-            android:layout_height="160dp"
+            android:layout_height="200dp"
             android:layout_marginTop="20dp"
             android:clickable="true"
             android:focusable="true"
@@ -115,12 +115,12 @@
                         android:paddingVertical="2dp"
                         android:text="KHÁM PHÁ"
                         android:textColor="#FFFFFF"
-                        android:textSize="10sp" />
+                        android:textSize="15sp" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
+                        android:layout_marginTop="20dp"
                         android:text="Phương Tiện Giao Thông"
                         android:textColor="@color/text_black"
                         android:textSize="24sp"
@@ -130,20 +130,20 @@
 
                 <com.google.android.material.imageview.ShapeableImageView
                     android:id="@+id/img_car"
-                    android:layout_width="120dp"
-                    android:layout_height="120dp"
+                    android:layout_width="200dp"
+                    android:layout_height="200dp"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:scaleType="centerCrop"
                     android:src="@drawable/car_img"
-                    app:shapeAppearanceOverlay="@style/RoundedImageView15dp" />
+                    app:shapeAppearanceOverlay="@style/RoundedImage" />
             </RelativeLayout>
         </androidx.cardview.widget.CardView>
 
         <androidx.cardview.widget.CardView
             android:id="@+id/card_chu_cai"
             android:layout_width="match_parent"
-            android:layout_height="160dp"
+            android:layout_height="200dp"
             android:layout_marginTop="20dp"
             android:clickable="true"
             android:focusable="true"
@@ -171,12 +171,12 @@
                         android:paddingVertical="2dp"
                         android:text="HỌC TẬP"
                         android:textColor="#FFFFFF"
-                        android:textSize="10sp" />
+                        android:textSize="15sp" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
+                        android:layout_marginTop="20dp"
                         android:text="Bảng Chữ Cái"
                         android:textColor="@color/text_black"
                         android:textSize="24sp"
@@ -186,13 +186,13 @@
 
                 <com.google.android.material.imageview.ShapeableImageView
                     android:id="@+id/img_abc"
-                    android:layout_width="120dp"
-                    android:layout_height="120dp"
+                    android:layout_width="200dp"
+                    android:layout_height="200dp"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:scaleType="centerCrop"
                     android:src="@drawable/abc_img"
-                    app:shapeAppearanceOverlay="@style/RoundedImageView15dp" />
+                    app:shapeAppearanceOverlay="@style/RoundedImage" />
             </RelativeLayout>
         </androidx.cardview.widget.CardView>
 

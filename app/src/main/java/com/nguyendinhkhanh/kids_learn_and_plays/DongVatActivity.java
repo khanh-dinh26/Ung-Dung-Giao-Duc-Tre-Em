@@ -18,12 +18,35 @@ public class DongVatActivity extends AppCompatActivity {
     private TextView tvAnimalName;
     private MediaPlayer mediaPlayer;
 
+    private int[] images = {
+            R.drawable.img_khi,
+            R.drawable.img_su_tu,
+            R.drawable.img_voi,
+            R.drawable.img_cho,
+            R.drawable.img_meo,
+            R.drawable.img_ga,
+            R.drawable.img_heo,
+            R.drawable.img_bo,
+            R.drawable.img_vit,
+            R.drawable.img_ho
+    };
+    private String[] names = {
+            "CON KHỈ", "SƯ TỬ", "CON VOI", "CON CHÓ", "CON MÈO",
+            "CON GÀ", "CON HEO", "CON BÒ", "CON VỊT", "CON HỔ"
+    };
+    private int[] sounds = {
+            R.raw.sound_khi,
+            R.raw.sound_su_tu,
+            R.raw.sound_voi,
+            R.raw.sound_cho,
+            R.raw.sound_meo,
+            R.raw.sound_ga,
+            R.raw.sound_heo,
+            R.raw.sound_bo,
+            R.raw.sound_vit,
+            R.raw.sound_ho
+    };
 
-    private int[] images = {R.drawable.lion_img, R.drawable.car_img, R.drawable.abc_img}; // Tạm dùng ảnh cũ,
-    private String[] names = {"CON KHỈ", "SƯ TỬ", "CON NGỰA"};
-    private int[] sounds = {R.raw.tieng_khi, R.raw.tieng_su_tu, R.raw.tieng_ngua};
-
-    // Biến lưu vị trí con vật đang xem (bắt đầu từ 0 là con đầu tiên)
     private int currentIndex = 0;
 
     @Override
@@ -71,29 +94,34 @@ public class DongVatActivity extends AppCompatActivity {
         });
     }
 
+
     // Hàm cập nhật Ảnh và Tên lên màn hình
     private void updateUI() {
         imgAnimal.setImageResource(images[currentIndex]);
         tvAnimalName.setText(names[currentIndex]);
+
+        stopSound();
+    }
+
+    // Hàm chuyên dùng để dập tắt âm thanh đang phát
+    private void stopSound() {
+        if (mediaPlayer != null) {
+            mediaPlayer.release(); // Giải phóng bộ nhớ của bài nhạc cũ
+            mediaPlayer = null;
+        }
     }
 
     // Hàm phát âm thanh
     private void playSound(int soundResource) {
-        // Nếu đang có âm thanh phát thì dừng lại trước khi phát cái mới
-        if (mediaPlayer != null) {
-            mediaPlayer.release();
-        }
+        stopSound(); // Gọi hàm tắt âm thanh trước cho an toàn, tránh đè nhạc
         mediaPlayer = MediaPlayer.create(this, soundResource);
         mediaPlayer.start();
     }
 
-    // Tắt nhạc nếu thoát khỏi màn hình này
+    // Tắt nhạc khi thoát hẳn khỏi Activity (bấm nút Back của điện thoại)
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (mediaPlayer != null) {
-            mediaPlayer.release();
-            mediaPlayer = null;
-        }
+        stopSound();
     }
 }
