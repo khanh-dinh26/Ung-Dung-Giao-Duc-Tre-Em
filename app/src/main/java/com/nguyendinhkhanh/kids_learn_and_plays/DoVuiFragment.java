@@ -5,6 +5,8 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -135,14 +137,12 @@ public class DoVuiFragment extends Fragment {
         Question currentQuestion = questionList.get(currentQuestionIndex);
 
         if (selectedOptionIndex == currentQuestion.getCorrectIndex()) {
-            // CỘNG ĐIỂM KHI ĐÚNG
+            // ĐÚNG: Cộng 10 điểm và hiện Popup Chúc mừng
             userScore += 10;
-
-            // SHOW BẢNG POPUP CHÚC MỪNG
             showCongratsPopup();
-
         } else {
-            Toast.makeText(getContext(), "Chưa đúng rồi, bé thử lại nhé! ❌", Toast.LENGTH_SHORT).show();
+            // SAI: Gọi hàm hiển thị Popup sai tự động tắt
+            showWrongAnswerPopup();
         }
     }
 
@@ -176,6 +176,28 @@ public class DoVuiFragment extends Fragment {
         });
 
         dialog.show();
+    }
+    private void showWrongAnswerPopup() {
+        Dialog dialog = new Dialog(getContext());
+        dialog.setContentView(R.layout.dialog_wrong_answer);
+
+        // Làm mờ nền xung quanh
+        if (dialog.getWindow() != null) {
+            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        }
+
+        dialog.setCancelable(false); // Không cho bé bấm bậy bạ ra ngoài
+        dialog.show();
+
+
+        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (dialog.isShowing()) {
+                    dialog.dismiss(); // Lệnh đóng Popup
+                }
+            }
+        }, 1500);
     }
 
     private void playSound(int soundResource) {
