@@ -1,64 +1,199 @@
-package com.nguyendinhkhanh.kids_learn_and_plays;
+package com.nguyendinhkhanh.kids_learn_and_plays; // Nhớ kiểm tra lại tên package
 
+import android.app.Dialog;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.media.MediaPlayer;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link DoVuiFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+
+import com.google.android.material.card.MaterialCardView;
+
+import java.util.ArrayList;
+import java.util.List;
+
 public class DoVuiFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    // Khai báo layout
+    private LinearLayout layoutStartMenu, layoutGamePlay;
+    private Button btnStartGame;
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    // Khai báo view trong game
+    private TextView tvQuestion, tvScore;
+    private ImageView btnPlayQuestion;
+    private ImageView imgOption1, imgOption2, imgOption3, imgOption4;
+    private MaterialCardView cardOption1, cardOption2, cardOption3, cardOption4;
 
-    public DoVuiFragment() {
-        // Required empty public constructor
-    }
+    private MediaPlayer mediaPlayer;
+    private List<Question> questionList;
+    private int currentQuestionIndex = 0;
+    private int userScore = 0;
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment DoVuiFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static DoVuiFragment newInstance(String param1, String param2) {
-        DoVuiFragment fragment = new DoVuiFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
+    public DoVuiFragment() { }
 
+    @Nullable
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_do_vui, container, false);
+
+        // 1. Ánh xạ layout Menu và Game
+        layoutStartMenu = view.findViewById(R.id.layout_start_menu);
+        layoutGamePlay = view.findViewById(R.id.layout_game_play);
+        btnStartGame = view.findViewById(R.id.btn_start_game);
+
+        // 2. Ánh xạ thành phần Game
+        tvQuestion = view.findViewById(R.id.tv_question);
+        tvScore = view.findViewById(R.id.tv_score);
+        btnPlayQuestion = view.findViewById(R.id.btn_play_question);
+
+        imgOption1 = view.findViewById(R.id.img_option_1);
+        imgOption2 = view.findViewById(R.id.img_option_2);
+        imgOption3 = view.findViewById(R.id.img_option_3);
+        imgOption4 = view.findViewById(R.id.img_option_4);
+
+        cardOption1 = view.findViewById(R.id.card_option_1);
+        cardOption2 = view.findViewById(R.id.card_option_2);
+        cardOption3 = view.findViewById(R.id.card_option_3);
+        cardOption4 = view.findViewById(R.id.card_option_4);
+
+        // Chuẩn bị dữ liệu
+        setupQuestions();
+
+        // 3. XỬ LÝ NÚT BẮT ĐẦU CHƠI
+        btnStartGame.setOnClickListener(v -> {
+            // Ẩn Menu đi, Hiện màn hình chơi game lên
+            layoutStartMenu.setVisibility(View.GONE);
+            layoutGamePlay.setVisibility(View.VISIBLE);
+
+            // Reset điểm số và Load câu hỏi đầu tiên
+            userScore = 0;
+            currentQuestionIndex = 0;
+            loadQuestion(currentQuestionIndex);
+        });
+
+        // Xử lý nút phát lại âm thanh câu hỏi
+        btnPlayQuestion.setOnClickListener(v -> playSound(questionList.get(currentQuestionIndex).getAudioResId()));
+
+        // Xử lý click đáp án
+        cardOption1.setOnClickListener(v -> checkAnswer(0));
+        cardOption2.setOnClickListener(v -> checkAnswer(1));
+        cardOption3.setOnClickListener(v -> checkAnswer(2));
+        cardOption4.setOnClickListener(v -> checkAnswer(3));
+
+        return view;
+    }
+
+    private void setupQuestions() {
+        questionList = new ArrayList<>();
+
+        // Thêm 5 câu đố (đổi tên ảnh/âm thanh khớp với hệ thống drawables của bạn)
+        int[] options1 = {R.drawable.img_khi, R.drawable.img_su_tu, R.drawable.img_voi, R.drawable.img_cho};
+        questionList.add(new Question("Bé hãy chọn hình của CON KHỈ nhé!", R.raw.sound_khi, options1, 0));
+
+        int[] options2 = {R.drawable.img_meo, R.drawable.img_heo, R.drawable.img_voi, R.drawable.img_ga};
+        questionList.add(new Question("Đâu là CON VOI vậy bé nhỉ?", R.raw.sound_voi, options2, 2));
+
+        int[] options3 = {R.drawable.img_bo, R.drawable.img_vit, R.drawable.img_ho, R.drawable.img_meo};
+        questionList.add(new Question("Bé chỉ giúp cô đâu là CON MÈO với nào?", R.raw.sound_meo, options3, 3));
+
+        int[] options4 = {R.drawable.img_cho, R.drawable.img_xe_canh_sat, R.drawable.img_su_tu, R.drawable.img_heo};
+        questionList.add(new Question("Hình nào là XE CẢNH SÁT hả bé?", R.raw.sound_xe_canh_sat, options4, 1));
+
+        int[] options5 = {R.drawable.img_cho, R.drawable.img_khi, R.drawable.img_ga, R.drawable.img_vit};
+        questionList.add(new Question("Tiếng Gâu Gâu là của bạn nào đây?", R.raw.sound_cho, options5, 0));
+    }
+
+    private void loadQuestion(int index) {
+        Question currentQuestion = questionList.get(index);
+        tvQuestion.setText(currentQuestion.getText());
+
+        int[] options = currentQuestion.getImageOptions();
+        imgOption1.setImageResource(options[0]);
+        imgOption2.setImageResource(options[1]);
+        imgOption3.setImageResource(options[2]);
+        imgOption4.setImageResource(options[3]);
+
+        // Cập nhật điểm lên màn hình chính
+        tvScore.setText("⭐ Điểm: " + userScore);
+
+        // Đọc to câu hỏi lên ngay khi vừa hiện ra
+        playSound(currentQuestion.getAudioResId());
+    }
+
+    private void checkAnswer(int selectedOptionIndex) {
+        Question currentQuestion = questionList.get(currentQuestionIndex);
+
+        if (selectedOptionIndex == currentQuestion.getCorrectIndex()) {
+            // CỘNG ĐIỂM KHI ĐÚNG
+            userScore += 10;
+
+            // SHOW BẢNG POPUP CHÚC MỪNG
+            showCongratsPopup();
+
+        } else {
+            Toast.makeText(getContext(), "Chưa đúng rồi, bé thử lại nhé! ❌", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void showCongratsPopup() {
+        Dialog dialog = new Dialog(getContext());
+        dialog.setContentView(R.layout.dialog_congratulations);
+
+        if (dialog.getWindow() != null) {
+            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        }
+
+        dialog.setCancelable(false);
+
+        Button btnNextQuestion = dialog.findViewById(R.id.btn_next_question);
+        TextView tvDialogScore = dialog.findViewById(R.id.tv_dialog_score);
+
+        tvDialogScore.setText("Bé nhận được ⭐ +10 điểm! (Tổng: " + userScore + ")");
+
+        btnNextQuestion.setOnClickListener(v -> {
+            dialog.dismiss();
+
+            if (currentQuestionIndex < questionList.size() - 1) {
+                currentQuestionIndex++;
+                loadQuestion(currentQuestionIndex);
+            } else {
+                Toast.makeText(getContext(), "🎉 Xuất sắc! Bé đã phá đảo tất cả câu hỏi! Tổng điểm: " + userScore, Toast.LENGTH_LONG).show();
+                // Khi hết câu hỏi, đưa bé quay lại màn hình Menu
+                layoutGamePlay.setVisibility(View.GONE);
+                layoutStartMenu.setVisibility(View.VISIBLE);
+            }
+        });
+
+        dialog.show();
+    }
+
+    private void playSound(int soundResource) {
+        if (mediaPlayer != null) {
+            mediaPlayer.release();
+        }
+        if (soundResource != 0) {
+            mediaPlayer = MediaPlayer.create(getContext(), soundResource);
+            mediaPlayer.start();
         }
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_do_vui, container, false);
+    public void onDestroyView() {
+        super.onDestroyView();
+        if (mediaPlayer != null) {
+            mediaPlayer.release();
+            mediaPlayer = null;
+        }
     }
 }
