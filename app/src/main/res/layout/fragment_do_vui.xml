@@ -140,12 +140,12 @@
                     app:cardElevation="5dp"
                     app:strokeColor="#FFB74D"
                     app:strokeWidth="4dp">
+
                     <ImageView
                         android:id="@+id/img_option_1"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:padding="5dp"
-                        android:scaleType="fitCenter" />
+                        android:scaleType="centerCrop" />
                 </com.google.android.material.card.MaterialCardView>
 
                 <com.google.android.material.card.MaterialCardView
@@ -158,12 +158,12 @@
                     app:cardElevation="5dp"
                     app:strokeColor="#FFB74D"
                     app:strokeWidth="4dp">
+
                     <ImageView
                         android:id="@+id/img_option_2"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:padding="5dp"
-                        android:scaleType="fitCenter" />
+                        android:scaleType="centerCrop" />
                 </com.google.android.material.card.MaterialCardView>
             </LinearLayout>
 
@@ -183,12 +183,12 @@
                     app:cardElevation="5dp"
                     app:strokeColor="#FFB74D"
                     app:strokeWidth="4dp">
+
                     <ImageView
                         android:id="@+id/img_option_3"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:padding="5dp"
-                        android:scaleType="fitCenter" />
+                        android:scaleType="centerCrop" />
                 </com.google.android.material.card.MaterialCardView>
 
                 <com.google.android.material.card.MaterialCardView
@@ -201,12 +201,12 @@
                     app:cardElevation="5dp"
                     app:strokeColor="#FFB74D"
                     app:strokeWidth="4dp">
+
                     <ImageView
                         android:id="@+id/img_option_4"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:padding="5dp"
-                        android:scaleType="fitCenter" />
+                        android:scaleType="centerCrop" />
                 </com.google.android.material.card.MaterialCardView>
             </LinearLayout>
         </LinearLayout>
