@@ -132,6 +132,7 @@
 
                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/card_option_1"
+                    android:soundEffectsEnabled="false"
                     android:layout_width="165dp"
                     android:layout_height="165dp"
                     android:layout_marginHorizontal="8dp"
@@ -151,6 +152,7 @@
                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/card_option_2"
                     android:layout_width="165dp"
+                    android:soundEffectsEnabled="false"
                     android:layout_height="165dp"
                     android:layout_marginHorizontal="8dp"
                     app:cardBackgroundColor="#FFFFFF"
@@ -176,6 +178,7 @@
                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/card_option_3"
                     android:layout_width="165dp"
+                    android:soundEffectsEnabled="false"
                     android:layout_height="165dp"
                     android:layout_marginHorizontal="8dp"
                     app:cardBackgroundColor="#FFFFFF"
@@ -195,6 +198,7 @@
                     android:id="@+id/card_option_4"
                     android:layout_width="165dp"
                     android:layout_height="165dp"
+                    android:soundEffectsEnabled="false"
                     android:layout_marginHorizontal="8dp"
                     app:cardBackgroundColor="#FFFFFF"
                     app:cardCornerRadius="20dp"

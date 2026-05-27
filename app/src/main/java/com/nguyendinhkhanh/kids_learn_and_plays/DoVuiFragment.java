@@ -1,4 +1,4 @@
-package com.nguyendinhkhanh.kids_learn_and_plays; // Nhớ kiểm tra lại tên package
+package com.nguyendinhkhanh.kids_learn_and_plays;
 
 import android.app.Dialog;
 import android.graphics.Color;
@@ -19,6 +19,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import java.util.Collections;
 import java.util.Random;
+import java.util.ArrayList;
+import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -26,12 +28,15 @@ import androidx.fragment.app.Fragment;
 
 import com.google.android.material.card.MaterialCardView;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class DoVuiFragment extends Fragment {
 
 
+    private MediaPlayer bgGameMusic;
+    private MediaPlayer correctSound;
+    private MediaPlayer wrongSound;
+    private MediaPlayer mediaPlayer;
+
+    // Khuôn mẫu dữ liệu
     class QuizItem {
         String name;
         int imageResId;
@@ -43,20 +48,20 @@ public class DoVuiFragment extends Fragment {
             this.audioResId = audioResId;
         }
     }
+
+    // Các biến trạng thái Game
     private int currentQuestionIndex = 0;
     private int userScore = 0;
     private int wrongAttemptCount = 0;
+    private List<Question> questionList;
+
+    // Khai báo View
     private LinearLayout layoutStartMenu, layoutGamePlay;
     private Button btnStartGame;
-
-    // Khai báo view trong game
     private TextView tvQuestion, tvScore;
     private ImageView btnPlayQuestion;
     private ImageView imgOption1, imgOption2, imgOption3, imgOption4;
     private MaterialCardView cardOption1, cardOption2, cardOption3, cardOption4;
-
-    private MediaPlayer mediaPlayer;
-    private List<Question> questionList;
 
     public DoVuiFragment() { }
 
@@ -85,43 +90,58 @@ public class DoVuiFragment extends Fragment {
         cardOption3 = view.findViewById(R.id.card_option_3);
         cardOption4 = view.findViewById(R.id.card_option_4);
 
-        // Chuẩn bị dữ liệu
+        // 3. Khởi tạo dữ liệu và Âm thanh
         setupQuestions();
 
-        // 3. XỬ LÝ NÚT BẮT ĐẦU CHƠI
+        bgGameMusic = MediaPlayer.create(getContext(), R.raw.bg_game);
+        if (bgGameMusic != null) bgGameMusic.setLooping(true);
+
+        correctSound = MediaPlayer.create(getContext(), R.raw.sound_correct);
+        wrongSound = MediaPlayer.create(getContext(), R.raw.sound_wrong);
+
+        // 4. XỬ LÝ NÚT BẮT ĐẦU CHƠI
         btnStartGame.setOnClickListener(v -> {
+            SoundManager.playClick(getContext()); // Gọi âm thanh Click dùng chung
+
             layoutStartMenu.setVisibility(View.GONE);
             layoutGamePlay.setVisibility(View.VISIBLE);
 
+            // Nạp điểm cũ
             SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("GameData", Context.MODE_PRIVATE);
             userScore = sharedPreferences.getInt("total_stars", 0);
 
-            wrongAttemptCount = 0; // RESET LẠI SỐ LẦN SAI VỀ 0 KHI BẮT ĐẦU GAME MỚI
+            // Tắt nhạc Toàn App, Bật nhạc Game
+            if (getActivity() instanceof MainActivity) {
+                ((MainActivity) getActivity()).pauseGlobalMusic();
+            }
+            if (bgGameMusic != null) bgGameMusic.start();
+
+            // Bắt đầu game
+            wrongAttemptCount = 0;
             currentQuestionIndex = 0;
             loadQuestion(currentQuestionIndex);
         });
 
-        // Xử lý nút phát lại âm thanh câu hỏi
-        btnPlayQuestion.setOnClickListener(v -> playSound(questionList.get(currentQuestionIndex).getAudioResId()));
+        // 5. Nút loa đọc lại câu hỏi
+        btnPlayQuestion.setOnClickListener(v -> {
+            SoundManager.playClick(getContext());
+            playSound(questionList.get(currentQuestionIndex).getAudioResId());
+        });
 
-        // Xử lý click đáp án
-        cardOption1.setOnClickListener(v -> checkAnswer(0));
-        cardOption2.setOnClickListener(v -> checkAnswer(1));
-        cardOption3.setOnClickListener(v -> checkAnswer(2));
-        cardOption4.setOnClickListener(v -> checkAnswer(3));
+        // 6. Xử lý click đáp án (Gắn tiếng Click vào từng ô)
+        cardOption1.setOnClickListener(v -> { SoundManager.playClick(getContext()); checkAnswer(0); });
+        cardOption2.setOnClickListener(v -> { SoundManager.playClick(getContext()); checkAnswer(1); });
+        cardOption3.setOnClickListener(v -> { SoundManager.playClick(getContext()); checkAnswer(2); });
+        cardOption4.setOnClickListener(v -> { SoundManager.playClick(getContext()); checkAnswer(3); });
 
         return view;
     }
 
     private void setupQuestions() {
         questionList = new ArrayList<>();
-
-        // 2. TẠO "CÁI TÚI" VÀ ĐỔ TẤT CẢ DỮ LIỆU VÀO TRONG
         List<QuizItem> allItems = new ArrayList<>();
 
-        // ==========================================
-        // -- ĐỔ 10 ĐỘNG VẬT VÀO TÚI --
-        // ==========================================
+        // -- ĐỔ ĐỘNG VẬT --
         allItems.add(new QuizItem("CON KHỈ", R.drawable.img_khi, R.raw.sound_khi));
         allItems.add(new QuizItem("SƯ TỬ", R.drawable.img_su_tu, R.raw.sound_su_tu));
         allItems.add(new QuizItem("CON VOI", R.drawable.img_voi, R.raw.sound_voi));
@@ -133,9 +153,7 @@ public class DoVuiFragment extends Fragment {
         allItems.add(new QuizItem("CON VỊT", R.drawable.img_vit, R.raw.sound_vit));
         allItems.add(new QuizItem("CON HỔ", R.drawable.img_ho, R.raw.sound_ho));
 
-        // ==========================================
-        // -- ĐỔ 8 PHƯƠNG TIỆN VÀO TÚI --
-        // ==========================================
+        // -- ĐỔ PHƯƠNG TIỆN --
         allItems.add(new QuizItem("XE CẢNH SÁT", R.drawable.img_xe_canh_sat, R.raw.sound_xe_canh_sat));
         allItems.add(new QuizItem("XE CỨU HỎA", R.drawable.img_xe_cuu_hoa, R.raw.sound_xe_cuu_hoa));
         allItems.add(new QuizItem("XE CỨU THƯƠNG", R.drawable.img_xe_cuu_thuong, R.raw.sound_xe_cuu_thuong));
@@ -145,35 +163,24 @@ public class DoVuiFragment extends Fragment {
         allItems.add(new QuizItem("XE MÁY", R.drawable.img_xe_may, R.raw.sound_xe_may));
         allItems.add(new QuizItem("XE ĐẠP", R.drawable.img_xe_dap, R.raw.sound_xe_dap));
 
-
-
-        // 3. BẮT ĐẦU TỰ ĐỘNG SINH CÂU HỎI
         int totalQuestionsToGenerate = 10;
         Random random = new Random();
 
-        // Kiểm tra an toàn: Phải có ít nhất 4 item trong túi thì mới tạo được câu hỏi 4 đáp án
         if (allItems.size() < 4) return;
 
         for (int i = 0; i < totalQuestionsToGenerate; i++) {
-            // Bước A: Lắc đều túi dữ liệu lên (Xáo trộn ngẫu nhiên)
             Collections.shuffle(allItems);
 
-            // Bước B: Bốc 4 cái đầu tiên ra làm 4 đáp án
             QuizItem optionA = allItems.get(0);
             QuizItem optionB = allItems.get(1);
             QuizItem optionC = allItems.get(2);
             QuizItem optionD = allItems.get(3);
 
             int[] options = {optionA.imageResId, optionB.imageResId, optionC.imageResId, optionD.imageResId};
-
-            // Bước C: Chọn ngẫu nhiên 1 vị trí (0, 1, 2, hoặc 3) làm đáp án ĐÚNG
             int correctIndex = random.nextInt(4);
             QuizItem correctItem = allItems.get(correctIndex);
 
-            // Bước D: Tự động ghép thành câu hỏi (Ví dụ: "Bé hãy tìm CON KHỈ nhé!")
             String dynamicQuestionText = "Bé hãy tìm " + correctItem.name + " nhé!";
-
-            // Bước E: Nạp vào danh sách Game
             questionList.add(new Question(dynamicQuestionText, correctItem.audioResId, options, correctIndex));
         }
     }
@@ -188,10 +195,7 @@ public class DoVuiFragment extends Fragment {
         imgOption3.setImageResource(options[2]);
         imgOption4.setImageResource(options[3]);
 
-        // Cập nhật điểm lên màn hình chính
         tvScore.setText("⭐ Điểm: " + userScore);
-
-        // Đọc to câu hỏi lên ngay khi vừa hiện ra
         playSound(currentQuestion.getAudioResId());
     }
 
@@ -199,45 +203,50 @@ public class DoVuiFragment extends Fragment {
         Question currentQuestion = questionList.get(currentQuestionIndex);
 
         if (selectedOptionIndex == currentQuestion.getCorrectIndex()) {
-            // ĐÚNG: Cộng điểm, lưu vào máy và hiện Popup Chúc mừng
-            userScore += 10;
+            // NẾU ĐÚNG
+            if (correctSound != null) {
+                correctSound.seekTo(0);
+                correctSound.start();
+            }
 
+            userScore += 10;
             SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("GameData", Context.MODE_PRIVATE);
-            SharedPreferences.Editor editor = sharedPreferences.edit();
-            editor.putInt("total_stars", userScore);
-            editor.apply();
+            sharedPreferences.edit().putInt("total_stars", userScore).apply();
 
             showCongratsPopup();
         } else {
-            // SAI: Tăng số lần sai lên 1
-            wrongAttemptCount++;
+            // NẾU SAI
+            if (wrongSound != null) {
+                wrongSound.seekTo(0);
+                wrongSound.start();
+            }
 
-            if (wrongAttemptCount >= 3) {
-                // GAME OVER: ĐÃ SAI 3 LẦN
+            wrongAttemptCount++; // Trừ 1 mạng
+
+            if (wrongAttemptCount >= 2) {
+                // HẾT 3 MẠNG -> GAME OVER
                 userScore -= 20;
+                if (userScore < 0) userScore = 0; // Không cho điểm âm
 
-                // Tránh để điểm bị âm (dưới 0) làm bé khó hiểu
-                if (userScore < 0) {
-                    userScore = 0;
-                }
-
-                // Lưu lại điểm mới (sau khi bị trừ) vào bộ nhớ máy
+                // Lưu lại điểm mới
                 SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("GameData", Context.MODE_PRIVATE);
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putInt("total_stars", userScore);
-                editor.apply();
+                sharedPreferences.edit().putInt("total_stars", userScore).apply();
 
-                // Báo cho bé biết tại sao trò chơi dừng lại
                 Toast.makeText(getContext(), "Trời ơi! Bé chọn sai 3 lần rồi. Trừ 20 điểm nhé! 😢", Toast.LENGTH_LONG).show();
 
-                // Đẩy bé ra lại màn hình Menu
+                // Dừng nhạc Game, Bật lại nhạc App
+                if (bgGameMusic != null) bgGameMusic.pause();
+                if (getActivity() instanceof MainActivity) {
+                    ((MainActivity) getActivity()).resumeGlobalMusic();
+                }
+
+                // Văng ra màn hình Menu
                 layoutGamePlay.setVisibility(View.GONE);
                 layoutStartMenu.setVisibility(View.VISIBLE);
-
             } else {
-                // NẾU CHƯA QUÁ 3 LẦN SAI: Chỉ báo Popup sai và nhắc bé số mạng còn lại
-                int mangConLai = 3 - wrongAttemptCount;
-                Toast.makeText(getContext(), "Cố lên! Bé chỉ còn " + mangConLai + " lần thử thôi nhé!", Toast.LENGTH_SHORT).show();
+                // CHƯA HẾT MẠNG -> Hiện Popup cảnh báo
+                int mangConLai = 2 - wrongAttemptCount;
+                Toast.makeText(getContext(), "Bé còn " + mangConLai + " lần thử thôi nhé!", Toast.LENGTH_SHORT).show();
                 showWrongAnswerPopup();
             }
         }
@@ -250,7 +259,6 @@ public class DoVuiFragment extends Fragment {
         if (dialog.getWindow() != null) {
             dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         }
-
         dialog.setCancelable(false);
 
         Button btnNextQuestion = dialog.findViewById(R.id.btn_next_question);
@@ -259,40 +267,42 @@ public class DoVuiFragment extends Fragment {
         tvDialogScore.setText("Bé nhận được ⭐ +10 điểm! (Tổng: " + userScore + ")");
 
         btnNextQuestion.setOnClickListener(v -> {
+            SoundManager.playClick(getContext()); // Bấm nút trong Popup cũng kêu pop
             dialog.dismiss();
 
             if (currentQuestionIndex < questionList.size() - 1) {
                 currentQuestionIndex++;
+                wrongAttemptCount = 0; // Sang câu mới, hồi lại 3 mạng cho bé
                 loadQuestion(currentQuestionIndex);
             } else {
-                Toast.makeText(getContext(), "🎉 Xuất sắc! Bé đã phá đảo tất cả câu hỏi! Tổng điểm: " + userScore, Toast.LENGTH_LONG).show();
-                // Khi hết câu hỏi, đưa bé quay lại màn hình Menu
+                Toast.makeText(getContext(), "🎉 Xuất sắc! Bé đã phá đảo! Tổng điểm: " + userScore, Toast.LENGTH_LONG).show();
+
+                // Hết câu hỏi -> Về Menu, đổi nhạc
+                if (bgGameMusic != null) bgGameMusic.pause();
+                if (getActivity() instanceof MainActivity) ((MainActivity) getActivity()).resumeGlobalMusic();
+
                 layoutGamePlay.setVisibility(View.GONE);
                 layoutStartMenu.setVisibility(View.VISIBLE);
             }
         });
-
         dialog.show();
     }
+
     private void showWrongAnswerPopup() {
         Dialog dialog = new Dialog(getContext());
         dialog.setContentView(R.layout.dialog_wrong_answer);
 
-        // Làm mờ nền xung quanh
         if (dialog.getWindow() != null) {
             dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         }
 
-        dialog.setCancelable(false); // Không cho bé bấm bậy bạ ra ngoài
+        dialog.setCancelable(false);
         dialog.show();
 
-
-        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if (dialog.isShowing()) {
-                    dialog.dismiss(); // Lệnh đóng Popup
-                }
+        // Tự tắt sau 1.5 giây
+        new Handler(Looper.getMainLooper()).postDelayed(() -> {
+            if (dialog.isShowing()) {
+                dialog.dismiss();
             }
         }, 1500);
     }
@@ -310,9 +320,14 @@ public class DoVuiFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        if (mediaPlayer != null) {
-            mediaPlayer.release();
-            mediaPlayer = null;
+
+        if (bgGameMusic != null) bgGameMusic.release();
+        if (correctSound != null) correctSound.release();
+        if (wrongSound != null) wrongSound.release();
+        if (mediaPlayer != null) mediaPlayer.release();
+
+        if (getActivity() instanceof MainActivity) {
+            ((MainActivity) getActivity()).resumeGlobalMusic();
         }
     }
 }

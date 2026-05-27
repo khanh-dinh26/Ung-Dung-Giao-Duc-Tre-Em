@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "728737844039",
+    "project_id": "learnasplay",
+    "storage_bucket": "learnasplay.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:728737844039:android:54da39d0d9c78b62d6da62",
+        "android_client_info": {
+          "package_name": "com.nguyendinhkhanh.kids_learn_and_plays"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDZAenkDbbnIhgCWdijMVqiUQtyuY03QoQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

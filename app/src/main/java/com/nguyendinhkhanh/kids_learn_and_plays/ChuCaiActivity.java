@@ -1,4 +1,4 @@
-package com.nguyendinhkhanh.kids_learn_and_plays; // Nhớ kiểm tra lại tên package
+package com.nguyendinhkhanh.kids_learn_and_plays;
 
 import android.graphics.Color;
 import android.media.MediaPlayer;
