@@ -7,7 +7,6 @@ public class Truyen {
     private String linkAudio;
     private int requiredStars;
 
-    // Bắt buộc phải có một Constructor rỗng cho Firebase Realtime Database
     public Truyen() { }
 
     public Truyen(String id, String tenTruyen, String linkAnh, String linkAudio, int requiredStars) {
