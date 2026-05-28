@@ -66,23 +66,18 @@ public class GiaoThongActivity extends AppCompatActivity {
         btnBack.setOnClickListener(v -> finish());
 
         // Xử lý nút Next
+        // Xử lý nút Next - Vòng lặp
         btnNext.setOnClickListener(v -> {
-            if (currentIndex < names.length - 1) {
-                currentIndex++;
-                updateUI();
-            } else {
-                Toast.makeText(this, "Đã đến thẻ cuối cùng!", Toast.LENGTH_SHORT).show();
-            }
+            SoundManager.playClick(this);
+            currentIndex = (currentIndex + 1) % names.length;
+            updateUI();
         });
 
-        // Xử lý nút Prev
+        // Xử lý nút Prev - Vòng lặp
         btnPrev.setOnClickListener(v -> {
-            if (currentIndex > 0) {
-                currentIndex--;
-                updateUI();
-            } else {
-                Toast.makeText(this, "Đây là thẻ đầu tiên!", Toast.LENGTH_SHORT).show();
-            }
+            SoundManager.playClick(this);
+            currentIndex = (currentIndex - 1 + names.length) % names.length;
+            updateUI();
         });
 
         // Xử lý nút Phát âm thanh

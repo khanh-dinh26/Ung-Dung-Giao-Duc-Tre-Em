@@ -61,21 +61,17 @@ public class ChuCaiActivity extends AppCompatActivity {
         btnBack.setOnClickListener(v -> finish());
 
         btnNext.setOnClickListener(v -> {
-            if (currentIndex < letters.length - 1) {
-                currentIndex++;
-                updateUI();
-            } else {
-                Toast.makeText(this, "Đã đến chữ cuối cùng!", Toast.LENGTH_SHORT).show();
-            }
+            SoundManager.playClick(this); // Tiếng chạm
+            // Chuyển tới: Cộng 1 rồi chia lấy dư cho tổng số chữ cái
+            currentIndex = (currentIndex + 1) % letters.length;
+            updateUI();
         });
 
         btnPrev.setOnClickListener(v -> {
-            if (currentIndex > 0) {
-                currentIndex--;
-                updateUI();
-            } else {
-                Toast.makeText(this, "Đây là chữ đầu tiên!", Toast.LENGTH_SHORT).show();
-            }
+            SoundManager.playClick(this);
+            // Lùi lại: Trừ 1, cộng thêm tổng số chữ, rồi chia lấy dư (để tránh số âm)
+            currentIndex = (currentIndex - 1 + letters.length) % letters.length;
+            updateUI();
         });
 
         // (Bạn mở comment dòng này ra khi đã có đủ file âm thanh nhé)

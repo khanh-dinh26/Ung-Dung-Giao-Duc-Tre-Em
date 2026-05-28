@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -54,10 +55,13 @@ public class TruyenAdapter extends RecyclerView.Adapter<TruyenAdapter.TruyenView
         boolean isUnlocked = currentStars >= truyen.getRequiredStars();
 
         if (isUnlocked) {
-            holder.tvLockStatus.setText("🔓 Đã mở khóa");
+            holder.tvLockStatus.setText("Đã mở khóa");
             holder.tvLockStatus.setTextColor(context.getResources().getColor(android.R.color.holo_green_dark));
         } else {
-            holder.tvLockStatus.setText("🔒 Cần đạt " + truyen.getRequiredStars() + " ⭐");
+            holder.layoutItemContent.setAlpha(0.4f); // Làm mờ toàn bộ khối (ảnh, chữ, icon)
+            holder.imgActionIcon.setImageResource(android.R.drawable.ic_secure); // Icon Ổ Khóa
+
+            holder.tvLockStatus.setText("Cần đạt " + truyen.getRequiredStars() + " ⭐");
             holder.tvLockStatus.setTextColor(context.getResources().getColor(android.R.color.holo_orange_dark));
         }
 
@@ -74,7 +78,7 @@ public class TruyenAdapter extends RecyclerView.Adapter<TruyenAdapter.TruyenView
                 context.startActivity(intent);
             } else {
                 // Không đủ điểm -> Cảnh báo nhắc bé quay lại Tab 2 chơi Đố Vui tích điểm
-                Toast.makeText(context, "Bé cần tích lũy đủ " + truyen.getRequiredStars() + " ⭐ ở mục Đố Vui để mở khóa truyện này nhé! 💪", Toast.LENGTH_LONG).show();
+                Toast.makeText(context, "Bé cần tích lũy đủ " + truyen.getRequiredStars() + " ⭐ ở mục Đố Vui để mở khóa truyện này nhé!", Toast.LENGTH_LONG).show();
             }
         });
     }
@@ -86,13 +90,17 @@ public class TruyenAdapter extends RecyclerView.Adapter<TruyenAdapter.TruyenView
 
     public static class TruyenViewHolder extends RecyclerView.ViewHolder {
         ImageView imgThumb;
+        ImageView imgActionIcon;
         TextView tvTitle, tvLockStatus;
+        LinearLayout layoutItemContent;
 
         public TruyenViewHolder(@NonNull View itemView) {
             super(itemView);
             imgThumb = itemView.findViewById(R.id.img_thumb_truyen);
             tvTitle = itemView.findViewById(R.id.tv_title_truyen);
             tvLockStatus = itemView.findViewById(R.id.tv_lock_status);
+            imgActionIcon = itemView.findViewById(R.id.img_action_icon);
+            layoutItemContent = itemView.findViewById(R.id.layout_item_content);
         }
     }
 }

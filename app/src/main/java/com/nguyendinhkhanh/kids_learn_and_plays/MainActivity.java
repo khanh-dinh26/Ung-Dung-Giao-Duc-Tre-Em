@@ -1,26 +1,30 @@
 package com.nguyendinhkhanh.kids_learn_and_plays;
 
-import android.media.MediaPlayer;
 import android.os.Bundle;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {
-    private MediaPlayer bgMainMusic;
+
+    // ĐÃ XÓA biến MediaPlayer cũ vì từ nay BackgroundMusicManager sẽ quản lý nhạc
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
+
+        // Chỉ khai báo bottomNav đúng 1 lần ở đây
         BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
+
+        // BẬT NHẠC NỀN CHUNG BẰNG MANAGER
+        BackgroundMusicManager.startMainMusic(this);
 
         // Hiển thị Fragment Khám Phá mặc định khi vừa mở app lên
         if (savedInstanceState == null) {
@@ -31,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
         // Bắt sự kiện khi bấm vào các nút trên thanh Menu
         bottomNav.setOnItemSelectedListener(item -> {
             Fragment selectedFragment = null;
-            SoundManager.playClick(MainActivity.this);
+            SoundManager.playClick(MainActivity.this); // Kêu tiếng click chạm
             int itemId = item.getItemId();
 
             if (itemId == R.id.nav_kham_pha) {
@@ -52,34 +56,12 @@ public class MainActivity extends AppCompatActivity {
             }
             return false;
         });
-
-        bgMainMusic = MediaPlayer.create(this, R.raw.bg_main);
-        if (bgMainMusic != null) {
-            bgMainMusic.setLooping(true); // Lặp đi lặp lại
-            bgMainMusic.start();
-        }
     }
 
-    // 3. Hàm này để Fragment Đố Vui gọi khi muốn TẠM DỪNG nhạc App
-    public void pauseGlobalMusic() {
-        if (bgMainMusic != null && bgMainMusic.isPlaying()) {
-            bgMainMusic.pause();
-        }
-    }
-
-    // 4. Hàm này để Fragment Đố Vui gọi khi muốn BẬT LẠI nhạc App
-    public void resumeGlobalMusic() {
-        if (bgMainMusic != null && !bgMainMusic.isPlaying()) {
-            bgMainMusic.start();
-        }
-    }
-
-    // 5. Giải phóng bộ nhớ khi tắt app hẳn
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (bgMainMusic != null) {
-            bgMainMusic.release();
-        }
+        // GIẢI PHÓNG TOÀN BỘ NHẠC KHI BÉ THOÁT HẲN APP
+        BackgroundMusicManager.releaseAll();
     }
 }

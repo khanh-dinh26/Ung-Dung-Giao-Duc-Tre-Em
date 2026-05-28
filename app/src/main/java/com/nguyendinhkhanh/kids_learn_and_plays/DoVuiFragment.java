@@ -29,9 +29,7 @@ import androidx.fragment.app.Fragment;
 import com.google.android.material.card.MaterialCardView;
 
 public class DoVuiFragment extends Fragment {
-
-
-    private MediaPlayer bgGameMusic;
+    // Đã xóa bgGameMusic vì dùng BackgroundMusicManager
     private MediaPlayer correctSound;
     private MediaPlayer wrongSound;
     private MediaPlayer mediaPlayer;
@@ -93,9 +91,6 @@ public class DoVuiFragment extends Fragment {
         // 3. Khởi tạo dữ liệu và Âm thanh
         setupQuestions();
 
-        bgGameMusic = MediaPlayer.create(getContext(), R.raw.bg_game);
-        if (bgGameMusic != null) bgGameMusic.setLooping(true);
-
         correctSound = MediaPlayer.create(getContext(), R.raw.sound_correct);
         wrongSound = MediaPlayer.create(getContext(), R.raw.sound_wrong);
 
@@ -110,11 +105,8 @@ public class DoVuiFragment extends Fragment {
             SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("GameData", Context.MODE_PRIVATE);
             userScore = sharedPreferences.getInt("total_stars", 0);
 
-            // Tắt nhạc Toàn App, Bật nhạc Game
-            if (getActivity() instanceof MainActivity) {
-                ((MainActivity) getActivity()).pauseGlobalMusic();
-            }
-            if (bgGameMusic != null) bgGameMusic.start();
+            // Tự động tắt nhạc nền App, bật nhạc Đố vui
+            BackgroundMusicManager.startGameMusic(getContext());
 
             // Bắt đầu game
             wrongAttemptCount = 0;
@@ -224,7 +216,7 @@ public class DoVuiFragment extends Fragment {
             wrongAttemptCount++; // Trừ 1 mạng
 
             if (wrongAttemptCount >= 2) {
-                // HẾT 3 MẠNG -> GAME OVER
+                // HẾT MẠNG -> GAME OVER
                 userScore -= 20;
                 if (userScore < 0) userScore = 0; // Không cho điểm âm
 
@@ -235,10 +227,7 @@ public class DoVuiFragment extends Fragment {
                 Toast.makeText(getContext(), "Trời ơi! Bé chọn sai 3 lần rồi. Trừ 20 điểm nhé! 😢", Toast.LENGTH_LONG).show();
 
                 // Dừng nhạc Game, Bật lại nhạc App
-                if (bgGameMusic != null) bgGameMusic.pause();
-                if (getActivity() instanceof MainActivity) {
-                    ((MainActivity) getActivity()).resumeGlobalMusic();
-                }
+                BackgroundMusicManager.stopGameMusic();
 
                 // Văng ra màn hình Menu
                 layoutGamePlay.setVisibility(View.GONE);
@@ -272,14 +261,13 @@ public class DoVuiFragment extends Fragment {
 
             if (currentQuestionIndex < questionList.size() - 1) {
                 currentQuestionIndex++;
-                wrongAttemptCount = 0; // Sang câu mới, hồi lại 3 mạng cho bé
+                wrongAttemptCount = 0; // Sang câu mới, hồi lại mạng cho bé
                 loadQuestion(currentQuestionIndex);
             } else {
                 Toast.makeText(getContext(), "🎉 Xuất sắc! Bé đã phá đảo! Tổng điểm: " + userScore, Toast.LENGTH_LONG).show();
 
                 // Hết câu hỏi -> Về Menu, đổi nhạc
-                if (bgGameMusic != null) bgGameMusic.pause();
-                if (getActivity() instanceof MainActivity) ((MainActivity) getActivity()).resumeGlobalMusic();
+                BackgroundMusicManager.stopGameMusic();
 
                 layoutGamePlay.setVisibility(View.GONE);
                 layoutStartMenu.setVisibility(View.VISIBLE);
@@ -321,13 +309,11 @@ public class DoVuiFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
 
-        if (bgGameMusic != null) bgGameMusic.release();
         if (correctSound != null) correctSound.release();
         if (wrongSound != null) wrongSound.release();
         if (mediaPlayer != null) mediaPlayer.release();
 
-        if (getActivity() instanceof MainActivity) {
-            ((MainActivity) getActivity()).resumeGlobalMusic();
-        }
+        // KHI RỜI KHỎI TAB ĐỐ VUI -> TẮT NHẠC GAME, MỞ LẠI NHẠC APP
+        BackgroundMusicManager.stopGameMusic();
     }
 }
