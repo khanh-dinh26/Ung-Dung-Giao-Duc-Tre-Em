@@ -2,52 +2,69 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#FAFCFA">
+    android:layout_height="match_parent">
 
     <LinearLayout
         android:id="@+id/layout_start_menu"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
-        android:orientation="vertical"
+        android:padding="30dp"
         android:visibility="visible">
 
-        <TextView
-            android:layout_width="wrap_content"
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="TRÒ CHƠI"
-            android:textColor="#264635"
-            android:textSize="28sp"
-            android:textStyle="bold" />
+            app:cardBackgroundColor="#FFFFFF"
+            app:cardCornerRadius="40dp"
+            app:cardElevation="10dp"
+            app:strokeWidth="0dp">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="30dp"
-            android:text="ĐỐ VUI"
-            android:textColor="#FFB74D"
-            android:textSize="45sp"
-            android:textStyle="bold" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:paddingVertical="50dp"
+                android:paddingHorizontal="20dp">
 
-        <ImageView
-            android:layout_width="200dp"
-            android:layout_height="200dp"
-            android:layout_marginBottom="50dp"
-            android:src="@drawable/ic_launcher_foreground" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="TRÒ CHƠI"
+                    android:textColor="#264635"
+                    android:textSize="26sp"
+                    android:textStyle="bold" />
 
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/btn_start_game"
-            android:layout_width="200dp"
-            android:layout_height="60dp"
-            android:background="@android:color/holo_orange_light"
-            android:text="BẮT ĐẦU CHƠI ▶"
-            android:textColor="#FFFFFF"
-            android:textSize="20sp"
-            android:textStyle="bold" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="30dp"
+                    android:text="ĐỐ VUI"
+                    android:textColor="#FFB74D"
+                    android:textSize="45sp"
+                    android:textStyle="bold" />
+
+                <ImageView
+                    android:layout_width="180dp"
+                    android:layout_height="180dp"
+                    android:layout_marginBottom="40dp"
+                    android:src="@drawable/quiz" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_start_game"
+                    android:layout_width="220dp"
+                    android:layout_height="65dp"
+                    android:text="BẮT ĐẦU ▶"
+                    android:textColor="#FFFFFF"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    app:backgroundTint="#FFB74D"
+                    app:cornerRadius="20dp" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
     </LinearLayout>
-
-
     <LinearLayout
         android:id="@+id/layout_game_play"
         android:layout_width="match_parent"
@@ -57,8 +74,8 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:paddingHorizontal="20dp">
+            android:layout_height="70dp"
+            android:paddingHorizontal="25dp">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -66,36 +83,47 @@
                 android:layout_centerInParent="true"
                 android:text="ĐỐ VUI"
                 android:textColor="#264635"
-                android:textSize="22sp"
+                android:textSize="24sp"
                 android:textStyle="bold" />
 
-            <TextView
-                android:id="@+id/tv_score"
+            <com.google.android.material.card.MaterialCardView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:text="⭐ Điểm: 0"
-                android:textColor="#FFB74D"
-                android:textSize="18sp"
-                android:textStyle="bold" />
+                app:cardBackgroundColor="#FFF3E0"
+                app:cardCornerRadius="20dp"
+                app:cardElevation="0dp"
+                app:strokeWidth="0dp">
+                <TextView
+                    android:id="@+id/tv_score"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingHorizontal="18dp"
+                    android:paddingVertical="10dp"
+                    android:text="⭐ 0"
+                    android:textColor="#F57C00"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+            </com.google.android.material.card.MaterialCardView>
         </RelativeLayout>
 
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="20dp"
-            android:layout_marginTop="5dp"
+            android:layout_marginHorizontal="25dp"
+            android:layout_marginTop="10dp"
             app:cardBackgroundColor="#2E5C41"
-            app:cardCornerRadius="20dp"
-            app:cardElevation="5dp">
+            app:cardCornerRadius="25dp"
+            app:cardElevation="8dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:gravity="center_vertical"
-                android:padding="20dp">
+                android:padding="25dp">
 
                 <TextView
                     android:id="@+id/tv_question"
@@ -104,15 +132,17 @@
                     android:layout_weight="1"
                     android:text="Câu hỏi..."
                     android:textColor="#FFFFFF"
-                    android:textSize="20sp"
+                    android:textSize="22sp"
                     android:textStyle="bold" />
 
                 <ImageView
                     android:id="@+id/btn_play_question"
-                    android:layout_width="45dp"
-                    android:layout_height="45dp"
-                    android:layout_marginLeft="15dp"
-                    android:src="@drawable/ic_launcher_foreground" />
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_marginLeft="20dp"
+                    android:src="@drawable/play"
+                    app:tint="#D5AA04"
+                    />
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
@@ -121,27 +151,26 @@
             android:layout_height="match_parent"
             android:orientation="vertical"
             android:gravity="center"
-            android:layout_margin="5dp">
+            android:layout_margin="10dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:gravity="center"
-                android:layout_marginBottom="15dp">
+                android:layout_marginBottom="20dp">
 
                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/card_option_1"
                     android:soundEffectsEnabled="false"
-                    android:layout_width="165dp"
-                    android:layout_height="165dp"
-                    android:layout_marginHorizontal="8dp"
+                    android:layout_width="160dp"
+                    android:layout_height="160dp"
+                    android:layout_marginHorizontal="10dp"
                     app:cardBackgroundColor="#FFFFFF"
-                    app:cardCornerRadius="20dp"
-                    app:cardElevation="5dp"
+                    app:cardCornerRadius="25dp"
+                    app:cardElevation="8dp"
                     app:strokeColor="#FFB74D"
-                    app:strokeWidth="4dp">
-
+                    app:strokeWidth="5dp">
                     <ImageView
                         android:id="@+id/img_option_1"
                         android:layout_width="match_parent"
@@ -151,16 +180,15 @@
 
                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/card_option_2"
-                    android:layout_width="165dp"
                     android:soundEffectsEnabled="false"
-                    android:layout_height="165dp"
-                    android:layout_marginHorizontal="8dp"
+                    android:layout_width="160dp"
+                    android:layout_height="160dp"
+                    android:layout_marginHorizontal="10dp"
                     app:cardBackgroundColor="#FFFFFF"
-                    app:cardCornerRadius="20dp"
-                    app:cardElevation="5dp"
+                    app:cardCornerRadius="25dp"
+                    app:cardElevation="8dp"
                     app:strokeColor="#FFB74D"
-                    app:strokeWidth="4dp">
-
+                    app:strokeWidth="5dp">
                     <ImageView
                         android:id="@+id/img_option_2"
                         android:layout_width="match_parent"
@@ -177,16 +205,15 @@
 
                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/card_option_3"
-                    android:layout_width="165dp"
                     android:soundEffectsEnabled="false"
-                    android:layout_height="165dp"
-                    android:layout_marginHorizontal="8dp"
+                    android:layout_width="160dp"
+                    android:layout_height="160dp"
+                    android:layout_marginHorizontal="10dp"
                     app:cardBackgroundColor="#FFFFFF"
-                    app:cardCornerRadius="20dp"
-                    app:cardElevation="5dp"
+                    app:cardCornerRadius="25dp"
+                    app:cardElevation="8dp"
                     app:strokeColor="#FFB74D"
-                    app:strokeWidth="4dp">
-
+                    app:strokeWidth="5dp">
                     <ImageView
                         android:id="@+id/img_option_3"
                         android:layout_width="match_parent"
@@ -196,16 +223,15 @@
 
                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/card_option_4"
-                    android:layout_width="165dp"
-                    android:layout_height="165dp"
                     android:soundEffectsEnabled="false"
-                    android:layout_marginHorizontal="8dp"
+                    android:layout_width="160dp"
+                    android:layout_height="160dp"
+                    android:layout_marginHorizontal="10dp"
                     app:cardBackgroundColor="#FFFFFF"
-                    app:cardCornerRadius="20dp"
-                    app:cardElevation="5dp"
+                    app:cardCornerRadius="25dp"
+                    app:cardElevation="8dp"
                     app:strokeColor="#FFB74D"
-                    app:strokeWidth="4dp">
-
+                    app:strokeWidth="5dp">
                     <ImageView
                         android:id="@+id/img_option_4"
                         android:layout_width="match_parent"

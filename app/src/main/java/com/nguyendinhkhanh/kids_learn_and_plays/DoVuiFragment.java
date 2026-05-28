@@ -253,20 +253,39 @@ public class DoVuiFragment extends Fragment {
         Button btnNextQuestion = dialog.findViewById(R.id.btn_next_question);
         TextView tvDialogScore = dialog.findViewById(R.id.tv_dialog_score);
 
-        tvDialogScore.setText("Bé nhận được ⭐ +10 điểm! (Tổng: " + userScore + ")");
+        // Kiểm tra xem đây có phải là câu cuối cùng (PHÁ ĐẢO) không
+        boolean isFinalQuestion = (currentQuestionIndex >= questionList.size() - 1);
+
+        if (isFinalQuestion) {
+            // NẾU LÀ CÂU CUỐI -> Cộng thêm 15 điểm Bonus
+            userScore += 15;
+
+            // Lưu lại điểm mới nhất vào máy
+            SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("GameData", Context.MODE_PRIVATE);
+            sharedPreferences.edit().putInt("total_stars", userScore).apply();
+
+            // Đổi câu chữ để khen ngợi bé
+            tvDialogScore.setText("Tuyệt vời! Bé được thưởng Bonus +15 ⭐\n(Tổng: " + userScore + ")");
+            btnNextQuestion.setText("Hoàn thành"); // Đổi chữ nút bấm
+        } else {
+            // NẾU LÀ CÂU BÌNH THƯỜNG
+            tvDialogScore.setText("Bé nhận được ⭐ +10 điểm! (Tổng: " + userScore + ")");
+        }
 
         btnNextQuestion.setOnClickListener(v -> {
-            SoundManager.playClick(getContext()); // Bấm nút trong Popup cũng kêu pop
+            SoundManager.playClick(getContext());
             dialog.dismiss();
 
-            if (currentQuestionIndex < questionList.size() - 1) {
+            if (!isFinalQuestion) {
+                // CHƯA PHÁ ĐẢO -> Sang câu tiếp theo
                 currentQuestionIndex++;
                 wrongAttemptCount = 0; // Sang câu mới, hồi lại mạng cho bé
                 loadQuestion(currentQuestionIndex);
             } else {
+                // ĐÃ PHÁ ĐẢO -> Trở về Menu chính
                 Toast.makeText(getContext(), "🎉 Xuất sắc! Bé đã phá đảo! Tổng điểm: " + userScore, Toast.LENGTH_LONG).show();
 
-                // Hết câu hỏi -> Về Menu, đổi nhạc
+                // Hết câu hỏi -> Về Menu, tắt nhạc Game, bật nhạc App
                 BackgroundMusicManager.stopGameMusic();
 
                 layoutGamePlay.setVisibility(View.GONE);

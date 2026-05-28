@@ -1,14 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".YeuThichFragment">
+    android:orientation="vertical">
 
-    <!-- TODO: Update blank fragment layout -->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:paddingHorizontal="25dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="TRUYỆN YÊU THÍCH"
+            android:textColor="#F57C00"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+    </RelativeLayout>
+
     <TextView
+        android:id="@+id/tv_no_favorite"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="100dp"
+        android:gravity="center"
+        android:lineSpacingExtra="8dp"
+        android:text="Bé chưa có truyện yêu thích nào.\nBé hãy vào mục Kể Truyện\nvà bấm vào ngôi sao nhé! ⭐"
+        android:textColor="#9E9E9E"
+        android:textSize="20sp"
+        android:visibility="gone"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_danh_sach_yeu_thich"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
-
-</FrameLayout>
+        android:paddingBottom="70dp"
+        android:clipToPadding="false"/>
+</LinearLayout>

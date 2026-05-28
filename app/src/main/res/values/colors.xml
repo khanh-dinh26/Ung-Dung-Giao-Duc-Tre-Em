@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="main_green">#4BA17D</color> <color name="bg_app">#F8FAF8</color> <color name="card_animal">#D4E9D6</color> <color name="card_transport">#D3E1EA</color> <color name="card_alphabet">#F9F0D6</color> <color name="text_black">#2D312E</color>
+    <color name="main_green">#4BA17D</color>
+    <color name="bg_app">#F8FAF8</color>
+    <color name="card_animal">#E0E9D4</color>
+    <color name="card_transport">#C5CEF8</color>
+    <color name="card_alphabet">#F9E8D6</color>
+    <color name="text_black">#2D312E</color>
     <color name="text_gray">#6E7370</color>
 </resources>

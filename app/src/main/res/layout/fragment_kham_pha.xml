@@ -2,36 +2,47 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/bg_app">
+>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:padding="20dp"
+
         android:paddingBottom="90dp">
 
-        <TextView
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="CHÀO BÉ YÊU!"
-            android:textColor="@color/text_gray"
-            android:textSize="14sp"
-            android:textStyle="bold" />
+            android:orientation="vertical"
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:text="Hôm nay bé muốn xem gì?"
-            android:textColor="@color/text_black"
-            android:textSize="22sp"
-            android:textStyle="bold" />
+            android:padding="16dp"
+            android:background="@drawable/bg_text_box">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="CHÀO BÉ YÊU!"
+                android:textColor="@color/text_gray"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:text="Hôm nay bé muốn xem gì?"
+                android:textColor="@color/text_black"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+        </LinearLayout>
 
         <androidx.cardview.widget.CardView
             android:id="@+id/card_dong_vat"
             android:layout_width="match_parent"
-            android:layout_height="150dp"
+            android:layout_height="165dp"
             android:layout_marginTop="25dp"
             android:clickable="true"
             android:focusable="true"
@@ -59,7 +70,7 @@
                         android:paddingHorizontal="10dp"
                         android:text="KHÁM PHÁ"
                         android:textColor="#FFFFFF"
-                        android:textSize="15sp" />
+                        android:textSize="16sp" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -67,15 +78,15 @@
                         android:layout_marginTop="20dp"
                         android:text="Thế Giới Động Vật"
                         android:textColor="@color/text_black"
-                        android:textSize="20sp"
+                        android:textSize="22sp"
                         android:textStyle="bold" />
 
                 </LinearLayout>
 
                 <com.google.android.material.imageview.ShapeableImageView
                     android:id="@+id/img_lion"
-                    android:layout_width="150dp"
-                    android:layout_height="150dp"
+                    android:layout_width="165dp"
+                    android:layout_height="165dp"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:scaleType="centerCrop"
@@ -87,7 +98,7 @@
         <androidx.cardview.widget.CardView
             android:id="@+id/card_giao_thong"
             android:layout_width="match_parent"
-            android:layout_height="150dp"
+            android:layout_height="165dp"
             android:layout_marginTop="20dp"
             android:clickable="true"
             android:focusable="true"
@@ -115,13 +126,13 @@
                         android:paddingVertical="2dp"
                         android:text="KHÁM PHÁ"
                         android:textColor="#FFFFFF"
-                        android:textSize="15sp" />
+                        android:textSize="16sp" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="20dp"
-                        android:text="Phương Tiện Giao Thông"
+                        android:text="Phương Tiện\nGiao Thông"
                         android:textColor="@color/text_black"
                         android:textSize="20sp"
                         android:textStyle="bold" />
@@ -130,8 +141,8 @@
 
                 <com.google.android.material.imageview.ShapeableImageView
                     android:id="@+id/img_car"
-                    android:layout_width="150dp"
-                    android:layout_height="150dp"
+                    android:layout_width="165dp"
+                    android:layout_height="165dp"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:scaleType="centerCrop"
@@ -143,7 +154,7 @@
         <androidx.cardview.widget.CardView
             android:id="@+id/card_chu_cai"
             android:layout_width="match_parent"
-            android:layout_height="150dp"
+            android:layout_height="165dp"
             android:layout_marginTop="20dp"
             android:clickable="true"
             android:focusable="true"
@@ -171,7 +182,7 @@
                         android:paddingVertical="2dp"
                         android:text="HỌC TẬP"
                         android:textColor="#FFFFFF"
-                        android:textSize="15sp" />
+                        android:textSize="16sp" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -179,15 +190,15 @@
                         android:layout_marginTop="20dp"
                         android:text="Bảng Chữ Cái"
                         android:textColor="@color/text_black"
-                        android:textSize="20sp"
+                        android:textSize="22sp"
                         android:textStyle="bold" />
 
                 </LinearLayout>
 
                 <com.google.android.material.imageview.ShapeableImageView
                     android:id="@+id/img_abc"
-                    android:layout_width="150dp"
-                    android:layout_height="150dp"
+                    android:layout_width="165dp"
+                    android:layout_height="165dp"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:scaleType="centerCrop"

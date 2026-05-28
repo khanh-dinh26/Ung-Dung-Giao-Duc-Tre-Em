@@ -1,9 +1,12 @@
 package com.nguyendinhkhanh.kids_learn_and_plays;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -27,6 +30,7 @@ public class TruyenFragment extends Fragment {
     private TruyenAdapter adapter;
     private List<Truyen> listTruyen;
     private DatabaseReference databaseReference;
+    private TextView tvCurrentStars;
 
     public TruyenFragment() { }
 
@@ -36,16 +40,34 @@ public class TruyenFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_truyen, container, false);
 
         rvTruyen = view.findViewById(R.id.rv_danh_sach_truyen);
-        rvTruyen.setLayoutManager(new LinearLayoutManager(getContext()));
+        tvCurrentStars = view.findViewById(R.id.tv_current_stars); // Ánh xạ túi Sao
 
+        rvTruyen.setLayoutManager(new LinearLayoutManager(getContext()));
         listTruyen = new ArrayList<>();
 
-        // KẾT NỐI ĐẾN NHÁNH TRUYỆN TRÊN FIREBASE
         databaseReference = FirebaseDatabase.getInstance().getReference("truyen_audio");
-
         loadTruyenFromFirebase();
 
         return view;
+    }
+
+    // Tự động cập nhật điểm sao khi bé mở tab Truyện
+    @Override
+    public void onResume() {
+        super.onResume();
+        updateStarsUI();
+        if (adapter != null) {
+            adapter.notifyDataSetChanged(); // Load lại danh sách truyện để cập nhật trạng thái
+        }
+    }
+
+    // Hàm cập nhật chữ Sao
+    private void updateStarsUI() {
+        if (getContext() != null) {
+            SharedPreferences pref = getContext().getSharedPreferences("GameData", Context.MODE_PRIVATE);
+            int stars = pref.getInt("total_stars", 0);
+            tvCurrentStars.setText("⭐ " + stars);
+        }
     }
 
     private void loadTruyenFromFirebase() {
@@ -59,14 +81,12 @@ public class TruyenFragment extends Fragment {
                         listTruyen.add(truyen);
                     }
                 }
-
-                // Gắn dữ liệu vào Adapter
                 if (getContext() != null) {
-                    adapter = new TruyenAdapter(getContext(), listTruyen);
+                    // Truyền thêm tvCurrentStars vào Adapter để Adapter trừ điểm khi mua truyện
+                    adapter = new TruyenAdapter(getContext(), listTruyen, tvCurrentStars);
                     rvTruyen.setAdapter(adapter);
                 }
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 Toast.makeText(getContext(), "Không thể tải dữ liệu truyện!", Toast.LENGTH_SHORT).show();

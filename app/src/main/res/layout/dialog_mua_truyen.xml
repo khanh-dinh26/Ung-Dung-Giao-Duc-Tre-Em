@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="20dp"
+    app:cardCornerRadius="24dp"
+    app:cardElevation="8dp"
+    app:strokeWidth="0dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="24dp"
+        android:gravity="center_horizontal"
+        android:background="#FAFCFA">
+
+        <!-- Icon trên cùng (Có thể thay bằng hình hộp quà hoặc ngôi sao) -->
+        <ImageView
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:src="@android:drawable/ic_dialog_info"
+            app:tint="#FFB74D"
+            android:layout_marginBottom="12dp"/>
+
+        <TextView
+            android:id="@+id/tv_dialog_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="MỞ KHÓA TRUYỆN"
+            android:textColor="#264635"
+            android:textSize="22sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tv_dialog_message"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="24dp"
+            android:gravity="center"
+            android:text="Bé có muốn dùng 100 ⭐ để mở khóa truyện này không?"
+            android:textColor="#424242"
+            android:textSize="18sp" />
+
+        <!-- Hai nút bấm Hủy và Mua -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="2">
+
+            <!-- Nút Hủy (Màu xám) -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_dialog_cancel"
+                android:layout_width="0dp"
+                android:layout_height="55dp"
+                android:layout_weight="1"
+                android:layout_marginRight="8dp"
+                android:text="Để sau"
+                android:textColor="#FFFFFF"
+                android:textSize="16sp"
+                app:backgroundTint="#B2FF0000"
+                app:cornerRadius="15dp" />
+
+            <!-- Nút Mua (Màu cam) -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_dialog_buy"
+                android:layout_width="0dp"
+                android:layout_height="55dp"
+                android:layout_weight="1"
+                android:layout_marginLeft="8dp"
+                android:text="Mua ngay"
+                android:textColor="#FFFFFF"
+                android:textSize="16sp"
+                app:backgroundTint="#48B10F"
+                app:cornerRadius="15dp" />
+        </LinearLayout>
+
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>

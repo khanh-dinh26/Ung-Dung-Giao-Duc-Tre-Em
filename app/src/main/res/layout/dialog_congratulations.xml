@@ -26,6 +26,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
+            android:gravity="center"
+            android:textAlignment="center"
             android:text="Bé nhận được ⭐ +10 điểm!"
             android:textColor="#FFB74D"
             android:textSize="18sp"

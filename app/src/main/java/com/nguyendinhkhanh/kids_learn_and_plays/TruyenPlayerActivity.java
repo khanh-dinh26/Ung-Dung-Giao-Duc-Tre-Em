@@ -2,6 +2,7 @@ package com.nguyendinhkhanh.kids_learn_and_plays;
 
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
+import android.content.SharedPreferences;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
@@ -29,6 +30,10 @@ public class TruyenPlayerActivity extends AppCompatActivity {
     private MediaPlayer mediaPlayer;
     private Handler seekHandler = new Handler();
     private Runnable seekRunnable;
+    private ImageView btnFavorite;
+    private boolean isFavorite = false;
+    private String idTruyen;
+    private SharedPreferences favPref;
 
     private ObjectAnimator rotateAnimator;
 
@@ -61,6 +66,28 @@ public class TruyenPlayerActivity extends AppCompatActivity {
         rotateAnimator.setDuration(15000);
         rotateAnimator.setRepeatCount(ValueAnimator.INFINITE);
         rotateAnimator.setInterpolator(new LinearInterpolator());
+
+        btnFavorite = findViewById(R.id.btn_player_favorite);
+        idTruyen = getIntent().getStringExtra("ID_TRUYEN");
+
+        favPref = getSharedPreferences("FavoritesData", MODE_PRIVATE);
+        isFavorite = favPref.getBoolean(idTruyen, false); // Mặc định là false (chưa yêu thích)
+        updateFavoriteIcon();
+
+        btnFavorite.setOnClickListener(v -> {
+            SoundManager.playClick(this);
+            isFavorite = !isFavorite; // Đảo ngược trạng thái
+
+            // Lưu trạng thái Offline vĩnh viễn
+            favPref.edit().putBoolean(idTruyen, isFavorite).apply();
+            updateFavoriteIcon();
+
+            if (isFavorite) {
+                Toast.makeText(this, "Đã thêm vào danh sách Yêu thích! ❤️", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, "Đã bỏ Yêu thích!", Toast.LENGTH_SHORT).show();
+            }
+        });
 
         // Nút Back
         btnBack.setOnClickListener(v -> {
@@ -160,6 +187,17 @@ public class TruyenPlayerActivity extends AppCompatActivity {
         });
     }
 
+    private void updateFavoriteIcon() {
+        if (isFavorite) {
+            // Khi yêu thích: Hiện ngôi sao đặc + Đổi màu Cam
+            btnFavorite.setImageResource(android.R.drawable.btn_star_big_on);
+            btnFavorite.setColorFilter(android.graphics.Color.parseColor("#F57C00"));
+        } else {
+            // Khi chưa yêu thích: Hiện ngôi sao rỗng + Đổi màu Xám
+            btnFavorite.setImageResource(android.R.drawable.btn_star_big_off);
+            btnFavorite.setColorFilter(android.graphics.Color.parseColor("#9E9E9E"));
+        }
+    }
     private void updateSeekBar() {
         if (mediaPlayer != null && mediaPlayer.isPlaying()) {
             seekBar.setProgress(mediaPlayer.getCurrentPosition());
