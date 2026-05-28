@@ -10,7 +10,7 @@
         android:layout_height="match_parent"
         android:gravity="center"
         android:padding="30dp"
-        android:visibility="visible">
+        android:visibility="invisible">
 
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
@@ -70,21 +70,13 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:visibility="gone">
+        android:visibility="visible">
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="70dp"
-            android:paddingHorizontal="25dp">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:text="ĐỐ VUI"
-                android:textColor="#264635"
-                android:textSize="24sp"
-                android:textStyle="bold" />
+            android:paddingHorizontal="25dp"
+            android:gravity="center">
 
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="wrap_content"
@@ -93,9 +85,10 @@
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 app:cardBackgroundColor="#FFF3E0"
-                app:cardCornerRadius="20dp"
+                app:cardCornerRadius="10dp"
                 app:cardElevation="0dp"
                 app:strokeWidth="0dp">
+
                 <TextView
                     android:id="@+id/tv_score"
                     android:layout_width="wrap_content"
@@ -104,7 +97,7 @@
                     android:paddingVertical="10dp"
                     android:text="⭐ 0"
                     android:textColor="#F57C00"
-                    android:textSize="20sp"
+                    android:textSize="25sp"
                     android:textStyle="bold" />
             </com.google.android.material.card.MaterialCardView>
         </RelativeLayout>
