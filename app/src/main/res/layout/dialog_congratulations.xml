@@ -33,16 +33,17 @@
             android:textSize="18sp"
             android:textStyle="bold" />
 
-        <androidx.appcompat.widget.AppCompatButton
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_next_question"
             android:layout_width="180dp"
-            android:layout_height="50dp"
+            android:layout_height="55dp"
             android:layout_marginTop="20dp"
-            android:background="@android:color/holo_orange_light"
             android:text="CHƠI TIẾP ▶"
             android:textColor="#FFFFFF"
             android:textSize="18sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            app:backgroundTint="#FFB74D"
+            app:cornerRadius="20dp" />
 
     </LinearLayout>
 </androidx.cardview.widget.CardView>

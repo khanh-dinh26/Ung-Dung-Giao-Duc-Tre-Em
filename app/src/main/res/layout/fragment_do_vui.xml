@@ -10,7 +10,7 @@
         android:layout_height="match_parent"
         android:gravity="center"
         android:padding="30dp"
-        android:visibility="invisible">
+        android:visibility="visible">
 
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
@@ -70,7 +70,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:visibility="visible">
+        android:visibility="gone">
 
         <RelativeLayout
             android:layout_width="match_parent"
