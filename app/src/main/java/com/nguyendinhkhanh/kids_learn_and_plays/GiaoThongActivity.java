@@ -63,7 +63,10 @@ public class GiaoThongActivity extends AppCompatActivity {
         updateUI();
 
         // Xử lý nút Back
-        btnBack.setOnClickListener(v -> finish());
+        btnBack.setOnClickListener(v -> {
+            SoundManager.playClick(this);
+            finish();
+        });
 
         // Xử lý nút Next
         // Xử lý nút Next - Vòng lặp
@@ -82,6 +85,7 @@ public class GiaoThongActivity extends AppCompatActivity {
 
         // Xử lý nút Phát âm thanh
         btnPlaySound.setOnClickListener(v -> {
+
             playSound(sounds[currentIndex]);
         });
     }

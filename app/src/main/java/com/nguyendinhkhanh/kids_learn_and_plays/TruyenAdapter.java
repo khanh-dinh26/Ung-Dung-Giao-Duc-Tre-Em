@@ -87,7 +87,10 @@ public class TruyenAdapter extends RecyclerView.Adapter<TruyenAdapter.TruyenView
                 if (latestStars >= truyen.getRequiredStars()) {
                     showPurchaseDialog(truyen, holder.getAdapterPosition());
                 } else {
-                    showToast("Bé cần thêm " + (truyen.getRequiredStars() - latestStars) + " ⭐ nữa để mua truyện này!");}
+                    // CẬP NHẬT: Gọi hộp thoại Popup báo thiếu sao
+                    int missingStars = truyen.getRequiredStars() - latestStars;
+                    showNotEnoughStarsDialog(missingStars);
+                }
             }
         });
 
@@ -98,14 +101,15 @@ public class TruyenAdapter extends RecyclerView.Adapter<TruyenAdapter.TruyenView
                 showRefundDialog(truyen, holder.getAdapterPosition());
             } else if (isFree) {
                 // Nếu là truyện miễn phí (Giá 0 sao)
-                Toast.makeText(context, "Truyện này miễn phí, bé không thể hoàn trả nhé!", Toast.LENGTH_SHORT).show();
+                showToast("Truyện này miễn phí, bé không thể hoàn trả nhé!");
             } else {
                 // Nếu chưa mua
-                Toast.makeText(context, "Bé chưa mua truyện này mà!", Toast.LENGTH_SHORT).show();
+                showToast("Bé chưa mua truyện này mà!");
             }
-            return true; // Trả về true để Android biết mình đã xử lý xong, không gọi nhầm sang sự kiện Click bình thường
+            return true; // Trả về true để Android biết mình đã xử lý xong
         });
     }
+
     private void showToast(String message) {
         if (mToast != null) {
             mToast.cancel(); // Tắt ngay thông báo cũ
@@ -113,6 +117,35 @@ public class TruyenAdapter extends RecyclerView.Adapter<TruyenAdapter.TruyenView
         mToast = Toast.makeText(context, message, Toast.LENGTH_SHORT);
         mToast.show();
     }
+
+    // HÀM: HỘP THOẠI THIẾU SAO (Tái sử dụng dialog_game_over)
+    private void showNotEnoughStarsDialog(int missingStars) {
+        android.app.Dialog dialog = new android.app.Dialog(context);
+        dialog.setContentView(R.layout.dialog_game_over);
+
+        if (dialog.getWindow() != null) {
+            dialog.getWindow().setBackgroundDrawable(new android.graphics.drawable.ColorDrawable(Color.TRANSPARENT));
+            dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        }
+
+        TextView tvTitle = dialog.findViewById(R.id.tv_game_over_title);
+        TextView tvMessage = dialog.findViewById(R.id.tv_game_over_message);
+        android.widget.Button btnOk = dialog.findViewById(R.id.btn_game_over_ok);
+
+        // Đổi chữ của giao diện Thua Game thành chữ Thiếu Sao
+        if (tvTitle != null) tvTitle.setText("THIẾU SAO RỒI! 😢");
+        if (tvMessage != null) tvMessage.setText("Bé cần thêm " + missingStars + " ⭐ nữa\nđể mở khóa truyện này nhé!");
+        if (btnOk != null) {
+            btnOk.setText("ĐÃ HIỂU");
+            btnOk.setOnClickListener(v -> {
+                SoundManager.playClick(context);
+                dialog.dismiss();
+            });
+        }
+
+        dialog.show();
+    }
+
     // HÀM 1: HỘP THOẠI MUA TRUYỆN
     private void showPurchaseDialog(Truyen truyen, int position) {
         int currentStars = pref.getInt("total_stars", 0);
@@ -150,13 +183,12 @@ public class TruyenAdapter extends RecyclerView.Adapter<TruyenAdapter.TruyenView
                 tvCurrentStars.setText("⭐ " + newStars);
             }
 
-            Toast.makeText(context, "Mở khóa thành công!", Toast.LENGTH_SHORT).show();
             dialog.dismiss();
         });
         dialog.show();
     }
 
-    // HÀM 2: HỘP THOẠI HOÀN TRẢ TRUYỆN (MỚI THÊM)
+    // HÀM 2: HỘP THOẠI HOÀN TRẢ TRUYỆN
     private void showRefundDialog(Truyen truyen, int position) {
         int refundStars = truyen.getRequiredStars() / 2; // Tính 50% số sao được hoàn lại
         int currentStars = pref.getInt("total_stars", 0);

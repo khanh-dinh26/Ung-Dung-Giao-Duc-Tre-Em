@@ -17,7 +17,6 @@
         android:gravity="center_horizontal"
         android:background="#FAFCFA">
 
-        <!-- Icon trên cùng (Có thể thay bằng hình hộp quà hoặc ngôi sao) -->
         <ImageView
             android:layout_width="60dp"
             android:layout_height="60dp"
@@ -52,7 +51,7 @@
             android:orientation="horizontal"
             android:weightSum="2">
 
-            <!-- Nút Hủy (Màu xám) -->
+
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_dialog_cancel"
                 android:layout_width="0dp"
@@ -62,10 +61,10 @@
                 android:text="Để sau"
                 android:textColor="#FFFFFF"
                 android:textSize="16sp"
-                app:backgroundTint="#B2FF0000"
+                app:backgroundTint="#E53935"
                 app:cornerRadius="15dp" />
 
-            <!-- Nút Mua (Màu cam) -->
+
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_dialog_buy"
                 android:layout_width="0dp"

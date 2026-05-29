@@ -58,11 +58,13 @@ public class ChuCaiActivity extends AppCompatActivity {
 
         updateUI();
 
-        btnBack.setOnClickListener(v -> finish());
+        btnBack.setOnClickListener(v -> {
+            SoundManager.playClick(this);
+            finish();
+        });
 
         btnNext.setOnClickListener(v -> {
-            SoundManager.playClick(this); // Tiếng chạm
-            // Chuyển tới: Cộng 1 rồi chia lấy dư cho tổng số chữ cái
+            SoundManager.playClick(this);
             currentIndex = (currentIndex + 1) % letters.length;
             updateUI();
         });

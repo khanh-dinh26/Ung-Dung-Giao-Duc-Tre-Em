@@ -26,15 +26,18 @@ public class KhamPhaFragment extends Fragment {
         CardView cardChuCai = view.findViewById(R.id.card_chu_cai);
 
         cardDongVat.setOnClickListener(v -> {
+            SoundManager.playClick(getContext());
             Intent intent = new Intent(getActivity(), DongVatActivity.class);
             startActivity(intent);
         });
 
         cardGiaoThong.setOnClickListener(v -> {
+            SoundManager.playClick(getContext());
             startActivity(new Intent(getActivity(), GiaoThongActivity.class));
         });
 
         cardChuCai.setOnClickListener(v -> {
+            SoundManager.playClick(getContext());
             startActivity(new Intent(getActivity(), ChuCaiActivity.class));
         });
 

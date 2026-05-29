@@ -12,7 +12,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.database.DataSnapshot;
@@ -28,7 +28,9 @@ public class YeuThichFragment extends Fragment {
 
     private RecyclerView rvTruyenYeuThich;
     private TextView tvNoFavorite;
-    private TruyenAdapter adapter;
+
+    // ĐÃ ĐỔI TỪ TruyenAdapter SANG TruyenGridAdapter
+    private TruyenGridAdapter gridAdapter;
     private List<Truyen> listTruyen;
     private DatabaseReference databaseReference;
 
@@ -42,7 +44,10 @@ public class YeuThichFragment extends Fragment {
         rvTruyenYeuThich = view.findViewById(R.id.rv_danh_sach_yeu_thich);
         tvNoFavorite = view.findViewById(R.id.tv_no_favorite);
 
-        rvTruyenYeuThich.setLayoutManager(new LinearLayoutManager(getContext()));
+        // ĐÃ ĐỔI SANG GRID LAYOUT MANAGER (2 cột)
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 2);
+        rvTruyenYeuThich.setLayoutManager(gridLayoutManager);
+
         listTruyen = new ArrayList<>();
 
         databaseReference = FirebaseDatabase.getInstance().getReference("truyen_audio");
@@ -84,9 +89,9 @@ public class YeuThichFragment extends Fragment {
                     tvNoFavorite.setVisibility(View.GONE);
                     rvTruyenYeuThich.setVisibility(View.VISIBLE);
 
-                    // Tái sử dụng lại TruyenAdapter cực kỳ tiện lợi
-                    adapter = new TruyenAdapter(getContext(), listTruyen, null);
-                    rvTruyenYeuThich.setAdapter(adapter);
+                    // SỬ DỤNG TRUYEN GRID ADAPTER
+                    gridAdapter = new TruyenGridAdapter(getContext(), listTruyen);
+                    rvTruyenYeuThich.setAdapter(gridAdapter);
                 }
             }
 

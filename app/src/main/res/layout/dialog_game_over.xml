@@ -16,20 +16,36 @@
         android:padding="30dp">
 
         <TextView
+            android:id="@+id/tv_game_over_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Chưa đúng rồi!"
+            android:text="THUA RỒI! 😢"
             android:textColor="#E53935"
-            android:textSize="24sp"
+            android:textSize="28sp"
             android:textStyle="bold" />
 
         <TextView
+            android:id="@+id/tv_game_over_message"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:text="Bé thử nhìn kỹ lại nhé 💖"
+            android:gravity="center"
+            android:textAlignment="center"
+            android:text="Bé đã chọn sai quá 2 lần.\nBị trừ 20 ⭐ nhé!"
             android:textColor="#757575"
             android:textSize="18sp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_game_over_ok"
+            android:layout_width="200dp"
+            android:layout_height="70dp"
+            android:layout_marginTop="25dp"
+            android:text="QUAY LẠI TỪ ĐẦU"
+            android:textColor="#FFFFFF"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:backgroundTint="#E53935"
+            app:cornerRadius="20dp" />
 
     </LinearLayout>
 </androidx.cardview.widget.CardView>

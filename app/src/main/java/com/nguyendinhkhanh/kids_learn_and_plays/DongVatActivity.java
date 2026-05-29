@@ -66,7 +66,10 @@
             updateUI();
 
             // Xử lý nút Back (Quay lại trang chủ)
-            btnBack.setOnClickListener(v -> finish());
+            btnBack.setOnClickListener(v -> {
+                SoundManager.playClick(this);
+                finish();
+            });
 
             // Xử lý nút Phải (Next) - Vòng lặp
             btnNext.setOnClickListener(v -> {
@@ -84,6 +87,7 @@
 
             // Xử lý nút Phát âm thanh
             btnPlaySound.setOnClickListener(v -> {
+
                 playSound(sounds[currentIndex]);
             });
         }

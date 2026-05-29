@@ -29,7 +29,7 @@ import androidx.fragment.app.Fragment;
 import com.google.android.material.card.MaterialCardView;
 
 public class DoVuiFragment extends Fragment {
-    // Đã xóa bgGameMusic vì dùng BackgroundMusicManager
+
     private MediaPlayer correctSound;
     private MediaPlayer wrongSound;
     private MediaPlayer mediaPlayer;
@@ -96,7 +96,7 @@ public class DoVuiFragment extends Fragment {
 
         // 4. XỬ LÝ NÚT BẮT ĐẦU CHƠI
         btnStartGame.setOnClickListener(v -> {
-            SoundManager.playClick(getContext()); // Gọi âm thanh Click dùng chung
+            SoundManager.playClick(getContext());
 
             layoutStartMenu.setVisibility(View.GONE);
             layoutGamePlay.setVisibility(View.VISIBLE);
@@ -216,24 +216,16 @@ public class DoVuiFragment extends Fragment {
             wrongAttemptCount++; // Trừ 1 mạng
 
             if (wrongAttemptCount >= 2) {
-                // HẾT MẠNG -> GAME OVER
+                // HẾT MẠNG -> GAME OVER -> Hiện bảng thông báo thua
                 userScore -= 20;
-                if (userScore < 0) userScore = 0; // Không cho điểm âm
+                if (userScore < 0) userScore = 0;
 
-                // Lưu lại điểm mới
                 SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("GameData", Context.MODE_PRIVATE);
                 sharedPreferences.edit().putInt("total_stars", userScore).apply();
 
-                Toast.makeText(getContext(), "Trời ơi! Bé chọn sai 3 lần rồi. Trừ 20 điểm nhé! 😢", Toast.LENGTH_LONG).show();
-
-                // Dừng nhạc Game, Bật lại nhạc App
-                BackgroundMusicManager.stopGameMusic();
-
-                // Văng ra màn hình Menu
-                layoutGamePlay.setVisibility(View.GONE);
-                layoutStartMenu.setVisibility(View.VISIBLE);
+                showGameOverPopup(); // Gọi hàm Game Over
             } else {
-                // CHƯA HẾT MẠNG -> Hiện Popup cảnh báo
+                // CHƯA HẾT MẠNG -> Hiện Popup cảnh báo sai
                 int mangConLai = 2 - wrongAttemptCount;
                 Toast.makeText(getContext(), "Bé còn " + mangConLai + " lần thử thôi nhé!", Toast.LENGTH_SHORT).show();
                 showWrongAnswerPopup();
@@ -241,6 +233,7 @@ public class DoVuiFragment extends Fragment {
         }
     }
 
+    // --- HÀM 1: BẢNG CHÚC MỪNG CÂU HỎI BÌNH THƯỜNG ---
     private void showCongratsPopup() {
         Dialog dialog = new Dialog(getContext());
         dialog.setContentView(R.layout.dialog_congratulations);
@@ -253,23 +246,14 @@ public class DoVuiFragment extends Fragment {
         Button btnNextQuestion = dialog.findViewById(R.id.btn_next_question);
         TextView tvDialogScore = dialog.findViewById(R.id.tv_dialog_score);
 
-        // Kiểm tra xem đây có phải là câu cuối cùng (PHÁ ĐẢO) không
         boolean isFinalQuestion = (currentQuestionIndex >= questionList.size() - 1);
 
+        tvDialogScore.setText("Bé nhận được ⭐ +10 điểm!\n(Tổng: " + userScore + ")");
+
         if (isFinalQuestion) {
-            // NẾU LÀ CÂU CUỐI -> Cộng thêm 15 điểm Bonus
-            userScore += 15;
-
-            // Lưu lại điểm mới nhất vào máy
-            SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("GameData", Context.MODE_PRIVATE);
-            sharedPreferences.edit().putInt("total_stars", userScore).apply();
-
-            // Đổi câu chữ để khen ngợi bé
-            tvDialogScore.setText("Tuyệt vời! Bé được thưởng Bonus +15 ⭐\n(Tổng: " + userScore + ")");
-            btnNextQuestion.setText("Hoàn thành"); // Đổi chữ nút bấm
+            btnNextQuestion.setText("KẾT QUẢ ▶"); // Câu cuối thì đổi thành KẾT QUẢ
         } else {
-            // NẾU LÀ CÂU BÌNH THƯỜNG
-            tvDialogScore.setText("Bé nhận được ⭐ +10 điểm! (Tổng: " + userScore + ")");
+            btnNextQuestion.setText("CHƠI TIẾP ▶");
         }
 
         btnNextQuestion.setOnClickListener(v -> {
@@ -277,24 +261,75 @@ public class DoVuiFragment extends Fragment {
             dialog.dismiss();
 
             if (!isFinalQuestion) {
-                // CHƯA PHÁ ĐẢO -> Sang câu tiếp theo
+                // Chưa phá đảo -> Sang câu tiếp
                 currentQuestionIndex++;
-                wrongAttemptCount = 0; // Sang câu mới, hồi lại mạng cho bé
+                wrongAttemptCount = 0;
                 loadQuestion(currentQuestionIndex);
             } else {
-                // ĐÃ PHÁ ĐẢO -> Trở về Menu chính
-                Toast.makeText(getContext(), "🎉 Xuất sắc! Bé đã phá đảo! Tổng điểm: " + userScore, Toast.LENGTH_LONG).show();
-
-                // Hết câu hỏi -> Về Menu, tắt nhạc Game, bật nhạc App
-                BackgroundMusicManager.stopGameMusic();
-
-                layoutGamePlay.setVisibility(View.GONE);
-                layoutStartMenu.setVisibility(View.VISIBLE);
+                // ĐÃ PHÁ ĐẢO -> Hiện bảng vinh danh chiến thắng
+                showPhaDaoPopup();
             }
         });
         dialog.show();
     }
 
+    // --- HÀM 2: BẢNG VINH DANH PHÁ ĐẢO (CHIẾN THẮNG) ---
+    private void showPhaDaoPopup() {
+        Dialog dialog = new Dialog(getContext());
+        dialog.setContentView(R.layout.dialog_pha_dao);
+
+        if (dialog.getWindow() != null) {
+            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        }
+        dialog.setCancelable(false);
+
+        TextView tvScore = dialog.findViewById(R.id.tv_pha_dao_score);
+        Button btnOk = dialog.findViewById(R.id.btn_pha_dao_ok);
+
+        // Cộng 15 sao Bonus
+        userScore += 15;
+        SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("GameData", Context.MODE_PRIVATE);
+        sharedPreferences.edit().putInt("total_stars", userScore).apply();
+
+        tvScore.setText("Bé đã hoàn thành xuất sắc!\nNhận được Bonus +15 ⭐\nTổng điểm: " + userScore);
+
+        btnOk.setOnClickListener(v -> {
+            SoundManager.playClick(getContext());
+            dialog.dismiss();
+
+            // Xử lý về màn hình chính
+            BackgroundMusicManager.stopGameMusic();
+            layoutGamePlay.setVisibility(View.GONE);
+            layoutStartMenu.setVisibility(View.VISIBLE);
+        });
+        dialog.show();
+    }
+
+    // --- HÀM 3: BẢNG GAME OVER (THUA) ---
+    private void showGameOverPopup() {
+        Dialog dialog = new Dialog(getContext());
+        dialog.setContentView(R.layout.dialog_game_over);
+
+        if (dialog.getWindow() != null) {
+            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        }
+        dialog.setCancelable(false);
+
+        Button btnOk = dialog.findViewById(R.id.btn_game_over_ok);
+
+        btnOk.setOnClickListener(v -> {
+            SoundManager.playClick(getContext());
+            dialog.dismiss();
+
+            // Xử lý về màn hình Menu
+            BackgroundMusicManager.stopGameMusic();
+            layoutGamePlay.setVisibility(View.GONE);
+            layoutStartMenu.setVisibility(View.VISIBLE);
+        });
+        dialog.show();
+    }
+
+    // --- HÀM 4: BẢNG CẢNH BÁO SAI ---
     private void showWrongAnswerPopup() {
         Dialog dialog = new Dialog(getContext());
         dialog.setContentView(R.layout.dialog_wrong_answer);
@@ -302,7 +337,6 @@ public class DoVuiFragment extends Fragment {
         if (dialog.getWindow() != null) {
             dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         }
-
         dialog.setCancelable(false);
         dialog.show();
 
@@ -311,7 +345,7 @@ public class DoVuiFragment extends Fragment {
             if (dialog.isShowing()) {
                 dialog.dismiss();
             }
-        }, 1500);
+        }, 500);
     }
 
     private void playSound(int soundResource) {
