@@ -2,6 +2,8 @@ package com.nguyendinhkhanh.kids_learn_and_plays;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,8 +30,6 @@ public class YeuThichFragment extends Fragment {
 
     private RecyclerView rvTruyenYeuThich;
     private TextView tvNoFavorite;
-
-    // ĐÃ ĐỔI TỪ TruyenAdapter SANG TruyenGridAdapter
     private TruyenGridAdapter gridAdapter;
     private List<Truyen> listTruyen;
     private DatabaseReference databaseReference;
@@ -44,52 +44,67 @@ public class YeuThichFragment extends Fragment {
         rvTruyenYeuThich = view.findViewById(R.id.rv_danh_sach_yeu_thich);
         tvNoFavorite = view.findViewById(R.id.tv_no_favorite);
 
-        // ĐÃ ĐỔI SANG GRID LAYOUT MANAGER (2 cột)
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 2);
         rvTruyenYeuThich.setLayoutManager(gridLayoutManager);
 
         listTruyen = new ArrayList<>();
-
         databaseReference = FirebaseDatabase.getInstance().getReference("truyen_audio");
 
         return view;
     }
 
-    // Dùng onResume để mỗi lần bé mở sang Tab Yêu thích là danh sách tự động Update ngay lập tức
     @Override
     public void onResume() {
         super.onResume();
-        loadFavoriteStories();
+
+        // KIỂM TRA MẠNG
+        if (isNetworkAvailable()) {
+            loadFavoriteStories();
+        } else {
+            // NẾU MẤT MẠNG -> Đổi chữ thông báo ra giữa màn hình
+            tvNoFavorite.setText("Vui lòng kết nối mạng để dùng chức năng này! 📶");
+            tvNoFavorite.setVisibility(View.VISIBLE);
+            rvTruyenYeuThich.setVisibility(View.GONE);
+            Toast.makeText(getContext(), "Không có kết nối Internet!", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    // HÀM KIỂM TRA KẾT NỐI MẠNG
+    private boolean isNetworkAvailable() {
+        if (getContext() == null) return false;
+        ConnectivityManager connectivityManager = (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (connectivityManager != null) {
+            NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
+            return activeNetwork != null && activeNetwork.isConnectedOrConnecting();
+        }
+        return false;
     }
 
     private void loadFavoriteStories() {
-        // Chỉ tải dữ liệu 1 lần (SingleValueEvent) để tối ưu hiệu năng
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 listTruyen.clear();
                 if (getContext() == null) return;
 
-                // Đọc file lưu trữ Yêu thích Offline
                 SharedPreferences favPref = getContext().getSharedPreferences("FavoritesData", Context.MODE_PRIVATE);
 
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                     Truyen truyen = dataSnapshot.getValue(Truyen.class);
-                    // Nếu truyện tồn tại VÀ ID của truyện được đánh dấu là True (Yêu thích)
                     if (truyen != null && favPref.getBoolean(truyen.getId(), false)) {
                         listTruyen.add(truyen);
                     }
                 }
 
-                // Cập nhật giao diện (Ẩn/Hiện câu thông báo chưa có truyện)
                 if (listTruyen.isEmpty()) {
+                    // Mạng bình thường nhưng chưa có truyện -> Trả lại chữ gốc
+                    tvNoFavorite.setText("Bé chưa có truyện yêu thích nào.\nBé hãy vào mục Kể Truyện\nvà bấm vào ngôi sao nhé! ⭐");
                     tvNoFavorite.setVisibility(View.VISIBLE);
                     rvTruyenYeuThich.setVisibility(View.GONE);
                 } else {
                     tvNoFavorite.setVisibility(View.GONE);
                     rvTruyenYeuThich.setVisibility(View.VISIBLE);
 
-                    // SỬ DỤNG TRUYEN GRID ADAPTER
                     gridAdapter = new TruyenGridAdapter(getContext(), listTruyen);
                     rvTruyenYeuThich.setAdapter(gridAdapter);
                 }

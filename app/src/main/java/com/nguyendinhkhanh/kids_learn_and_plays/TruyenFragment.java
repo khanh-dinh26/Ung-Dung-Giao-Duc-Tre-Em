@@ -2,6 +2,8 @@ package com.nguyendinhkhanh.kids_learn_and_plays;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -40,28 +42,40 @@ public class TruyenFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_truyen, container, false);
 
         rvTruyen = view.findViewById(R.id.rv_danh_sach_truyen);
-        tvCurrentStars = view.findViewById(R.id.tv_current_stars); // Ánh xạ túi Sao
+        tvCurrentStars = view.findViewById(R.id.tv_current_stars);
 
         rvTruyen.setLayoutManager(new LinearLayoutManager(getContext()));
         listTruyen = new ArrayList<>();
 
         databaseReference = FirebaseDatabase.getInstance().getReference("truyen_audio");
-        loadTruyenFromFirebase();
 
         return view;
     }
 
-    // Tự động cập nhật điểm sao khi bé mở tab Truyện
     @Override
     public void onResume() {
         super.onResume();
         updateStarsUI();
-        if (adapter != null) {
-            adapter.notifyDataSetChanged(); // Load lại danh sách truyện để cập nhật trạng thái
+
+        // KIỂM TRA MẠNG TRƯỚC KHI TẢI
+        if (isNetworkAvailable()) {
+            loadTruyenFromFirebase();
+        } else {
+            Toast.makeText(getContext(), "Vui lòng kết nối mạng để xem truyện nhé! 📶", Toast.LENGTH_LONG).show();
         }
     }
 
-    // Hàm cập nhật chữ Sao
+    // HÀM KIỂM TRA KẾT NỐI MẠNG
+    private boolean isNetworkAvailable() {
+        if (getContext() == null) return false;
+        ConnectivityManager connectivityManager = (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (connectivityManager != null) {
+            NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
+            return activeNetwork != null && activeNetwork.isConnectedOrConnecting();
+        }
+        return false;
+    }
+
     private void updateStarsUI() {
         if (getContext() != null) {
             SharedPreferences pref = getContext().getSharedPreferences("GameData", Context.MODE_PRIVATE);
@@ -82,7 +96,6 @@ public class TruyenFragment extends Fragment {
                     }
                 }
                 if (getContext() != null) {
-                    // Truyền thêm tvCurrentStars vào Adapter để Adapter trừ điểm khi mua truyện
                     adapter = new TruyenAdapter(getContext(), listTruyen, tvCurrentStars);
                     rvTruyen.setAdapter(adapter);
                 }
